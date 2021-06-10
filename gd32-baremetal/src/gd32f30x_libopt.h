@@ -9,6 +9,7 @@
 
 #include "gd32f30x_rcu.h"
 #include "gd32f30x_pmu.h"
+#include "gd32f30x_gpio.h"
 
 #endif /* GD32F30X_LIBOPT_H */
 
