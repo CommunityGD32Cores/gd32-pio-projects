@@ -134,6 +134,12 @@ void USBD_LP_CAN0_RX0_IRQHandler (void)
     usbd_isr();
 }
 
+#include "systick.h"
+void SysTick_Handler(void)
+{
+    delay_decrement();
+}
+
 #ifdef USBD_LOWPWR_MODE_ENABLE
 
 /*!
