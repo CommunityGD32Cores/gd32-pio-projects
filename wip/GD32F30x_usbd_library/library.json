@@ -1,0 +1,31 @@
+{
+    "name": "GD32F30x_usbd_library",
+    "keywords": "usb, gd32",
+    "description": "The GD32F30x_usbd_library component of GD32 SPL",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/maxgerhardt/tobefilled.git"
+    },
+    "version": "1.0",
+    "authors": {
+      "name": "GigaDevice",
+      "url": "https://github.com/espressif/esp-adf"
+    },
+    "licence": "BSD-3",
+    "frameworks": "spl",
+    "platforms": "gd32",
+    "build" : {
+      "flags": [
+        "-I src/device/Include",
+        "-I src/usbd/Include",
+        "-I src/class/device/audio/Include",
+        "-I src/class/device/cdc/Include",
+        "-I src/class/device/dfu/Include",
+        "-I src/class/device/hid/Include",
+        "-I src/class/device/iap/Include",
+        "-I src/class/device/msc/Include",
+        "-I src/class/device/printer/Include"
+      ],
+      "srcFilter": "+<*> -<.git/> -<.svn/> -<example/> -<examples/> -<test/> -<tests/> -<*/class/device/audio/Source/>"
+    }
+  }
