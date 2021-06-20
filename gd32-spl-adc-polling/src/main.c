@@ -1,13 +1,3 @@
-/*!
-    \file    main.c
-    \brief   ADC_software_trigger_regular_channel_polling
-
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
-*/
-
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
@@ -35,11 +25,17 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
+/* 
+ * Sets pins PA1 to PA8 in ADC input mode, measures them and prints them via USART0.
+**/
+
 #include "gd32f30x.h"
-#include "systick.h"
 #include <stdio.h>
 
-__IO uint16_t adc_value[4];
+void systick_config(void);
+void delay_1ms(uint32_t count);
+
+__IO uint16_t adc_value[8];
 
 void rcu_config(void);
 void gpio_config(void);
@@ -78,10 +74,14 @@ int main(void)
         adc_value[1]=adc_channel_sample(ADC_CHANNEL_2);
         adc_value[2]=adc_channel_sample(ADC_CHANNEL_3);
         adc_value[3]=adc_channel_sample(ADC_CHANNEL_4);
+        adc_value[4]=adc_channel_sample(ADC_CHANNEL_5);
+        adc_value[5]=adc_channel_sample(ADC_CHANNEL_6);
+        adc_value[6]=adc_channel_sample(ADC_CHANNEL_7);
+        adc_value[7]=adc_channel_sample(ADC_CHANNEL_8);
 
         //print 16-bit ADC values and convert to voltage (VRef = 3.3V)
         for(int i=0; i < (int)sizeof(adc_value)/sizeof(adc_value[0]); i++) {
-            printf("ADC0 channel %d (PA%d): %d (%1.2fV)\n", i, i+1, adc_value[i], adc_value[i] * 3.3f / 4095.f);
+            printf("ADC0 channel %d (PA%d): %d (%1.2fV)\n", i+1, i+1, adc_value[i], adc_value[i] * 3.3f / 4095.f);
         }
         printf("\n");
         delay_1ms(500);
@@ -117,6 +117,10 @@ void gpio_config(void)
     gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_2);
     gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_3);
     gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_4);
+    gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_5);
+    gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_6);
+    gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_7);
+    gpio_init(GPIOA, GPIO_MODE_AIN, GPIO_OSPEED_10MHZ, GPIO_PIN_8);
 }
 
 /*!
@@ -187,4 +191,80 @@ int _write(int file, char *data, int len)
 
    // return # of bytes written - as best we can tell
    return len;
+}
+
+volatile static uint32_t delay;
+
+void systick_config(void)
+{
+    /* setup systick timer for 1000Hz interrupts */
+    if (SysTick_Config(SystemCoreClock / 1000U))
+    {
+        /* capture error */
+        while (1)
+        {
+        }
+    }
+    /* configure the systick handler priority */
+    NVIC_SetPriority(SysTick_IRQn, 0x00U);
+}
+
+void delay_1ms(uint32_t count)
+{
+    delay = count;
+
+    while (0U != delay)
+    {
+    }
+}
+
+void delay_decrement(void)
+{
+    if (0U != delay)
+    {
+        delay--;
+    }
+}
+
+void NMI_Handler(void) {}
+
+void HardFault_Handler(void)
+{
+    while (1)
+        ;
+}
+
+void MemManage_Handler(void)
+{
+    while (1)
+        ;
+}
+
+void BusFault_Handler(void)
+{
+    while (1)
+        ;
+}
+
+void UsageFault_Handler(void)
+{
+    while (1)
+        ;
+}
+
+void SVC_Handler(void)
+{
+}
+
+void DebugMon_Handler(void)
+{
+}
+
+void PendSV_Handler(void)
+{
+}
+
+void SysTick_Handler(void)
+{
+    delay_decrement();
 }
