@@ -6,6 +6,8 @@
 #include "gd32f3x0.h"
 #elif defined(GD32F30x)
 #include "gd32f30x.h"
+#elif defined(GD32E10X)
+#include "gd32e10x.h"
 #endif
 
 /* define blinky LED pin here, default PC13 */
