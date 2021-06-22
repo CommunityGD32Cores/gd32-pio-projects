@@ -28,7 +28,7 @@ int main(void)
 #if defined(GD32F3x0) || defined(GD32F1x0)
     gpio_mode_set(LEDPORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LEDPIN);
     gpio_output_options_set(LEDPORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, LEDPIN);
-#else /* valid for GD32F10x, GD32F30x */
+#else /* valid for GD32F10x, GD32F30x, GD32E10X */
     gpio_init(LEDPORT, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LEDPIN);
 #endif
     while (1)
