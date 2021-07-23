@@ -11,7 +11,12 @@
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+#ifdef PB10
 #define DHT11PIN PB10
+#else 
+#define DHT11PIN PB0
+#endif
+
 SimpleDHT11 dht11(DHT11PIN);
 
 void setup()

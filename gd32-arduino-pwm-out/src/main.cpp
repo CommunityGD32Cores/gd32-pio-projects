@@ -1,12 +1,17 @@
 #include <Arduino.h>
 
+#if defined(PA6) && defined(PC1)
 #define PWM_OUT_PIN   PA6
 #define LED_PIN       PC13
+#else
+#define PWM_OUT_PIN   PWM1
+#define LED_PIN       LED_BUILTIN
+#endif
 
 PWM pwm_output(PWM_OUT_PIN);
 
 void captureCompareCallback() {
-  digitalWrite(PC13, !digitalRead(PC13));
+  digitalWrite(LED_PIN, !digitalRead(LED_PIN));
 }
 
 void setup()
