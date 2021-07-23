@@ -19,7 +19,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.7]
-        example: ${{fromJson(needs.directories.outputs.dir)}}
+        example: ${{fromJson(needs.find-examples.outputs.dir)}}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
