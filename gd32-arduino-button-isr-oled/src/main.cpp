@@ -10,7 +10,14 @@
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+#ifdef PB11
 #define BUTTON_PIN PB11
+#elif defined(KEY0) 
+#define BUTTON_PIN KEY0
+#else
+#error "Please manually select button pin."
+#endif
+
 static volatile int num_presses = 0;
 static unsigned last_press = 0;
 #define DEBOUNCE_TIME 300
