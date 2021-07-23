@@ -36,4 +36,4 @@ jobs:
           platformio platform install https://github.com/CommunityGD32Cores/platform-gd32.git
       - name: Build examples
         run: |
-          platformio run -d ${{ matrix.example }}
+          platformio run -v -d ${{ matrix.example }}
