@@ -17,9 +17,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        example: ${{fromJson(needs.find-examples.outputs.dir)}}
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.7]
-        example: ${{fromJson(needs.find-examples.outputs.dir)}}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
