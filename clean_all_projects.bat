@@ -5,6 +5,5 @@ cd "%%i"
 echo current directory:
 cd
 pio run -t clean
-pause
 )
 cd %back%
