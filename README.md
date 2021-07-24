@@ -1,7 +1,7 @@
 # GD32 PlatformIO Projects
 
 ![example workflow](https://github.com/CommunityGD32Cores/gd32-pio-projects/actions/workflows/examples.yml/badge.svg) 
-[![GitHub pull-requests](https://img.shields.io/github/issues-pr/CommunityGD32Cores/gd32-pio-projects)](https://GitHub.com/CommunityGD32Cores/gd32-pio-projects/pull/) [![GitHub issues](https://img.shields.io/github/issues/CommunityGD32Cores/gd32-pio-projects.svg)](https://GitHub.com/CommunityGD32Cores/gd32-pio-projects/issues/)
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/CommunityGD32Cores/gd32-pio-projects)](https://GitHub.com/CommunityGD32Cores/gd32-pio-projects/pulls/) [![GitHub issues](https://img.shields.io/github/issues/CommunityGD32Cores/gd32-pio-projects.svg)](https://GitHub.com/CommunityGD32Cores/gd32-pio-projects/issues/)
 
 ## Description
 
