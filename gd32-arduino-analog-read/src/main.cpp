@@ -38,7 +38,7 @@ void setup()
   display.setTextColor(SSD1306_WHITE); // Draw white text
   display.clearDisplay();
   display.display();
-  pinMode(ANALOG_IN_PIN, INPUT_ANALOG);
+  pinMode(ANALOG_IN_PIN, INPUT);
   //default is 10-bit ADC (arduino-compatibility).
   //change to 12-bit ADC
   analogReadResolution(12);
