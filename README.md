@@ -127,7 +127,7 @@ Warn : STM32 flash size failed, probe inaccurate - assuming 512k flash
 ** Verified OK **
 ** Resetting Target **
 shutdown command invoked
-============================================================================================= [SUCCESS] Took 4.06 seconds =============================================================================================
+========= [SUCCESS] Took 4.06 seconds =========
 ```
 
 ## Serial Monitor
@@ -175,7 +175,6 @@ The same can be achieved from the CLI, [as documented](https://docs.platformio.o
 
 ```
 >pio debug -e genericGD32F303CC --interface=gdb -x .pioinit
-C:\Users\Max\.platformio\packages\toolchain-gccarmnoneeabi@1.90201.191206\bin\arm-none-eabi-gdb.exe: warning: Couldn't determine a path for the index cache directory.
 Reading symbols from C:\Users\Max\Desktop\gd32_dev\gd32-pio-projects\gd32-arduino-blinky\.pio\build\genericGD32F303CC\firmware.elf...
 PlatformIO Unified Debugger -> http://bit.ly/pio-debug
 PlatformIO: debug_tool = stlink
