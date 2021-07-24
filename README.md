@@ -158,3 +158,55 @@ Blinky nr. 3
 
 --- exit ---
 ```
+
+## Debugging
+
+If a SWD capable debug probe is connected to the target, and configured via [`debug_tool`](https://docs.platformio.org/en/latest/projectconf/section_env_debug.html#debug-tool), you can open the "Debug" sidebar in VSCode. In the upper left, the configuration "PIO Debug (your-project-name)" should be selected. By pressing the the "Play" button then, PlatformIO will start compiling the project in debug mode, start the debug server (e.g., OpenOCD) and connect to it with the appropriate GDB client. 
+
+It should hit a breakpoint in the `main()` function of the project (which can e.g. be in the Arduino core). From there, use the regular Step Over, Step Into, Step Out of, etc. buttons for debug control.
+
+VSCode also shows the state of all peripheral registers (such as `USART1`, `ADC0`, etc.) and decodes them. The ARM core's internal registers are shown in the expandable "Registers" panel.
+
+Note all the other possible [debug configuration options](https://docs.platformio.org/en/latest/projectconf/section_env_debug.html).
+
+![debugging](docs/vscode_debugging.png)
+
+The same can be achieved from the CLI, [as documented](https://docs.platformio.org/en/latest/core/userguide/cmd_debug.html#examples). This launches the user into a GDB session.
+
+```
+>pio debug -e genericGD32F303CC --interface=gdb -x .pioinit
+C:\Users\Max\.platformio\packages\toolchain-gccarmnoneeabi@1.90201.191206\bin\arm-none-eabi-gdb.exe: warning: Couldn't determine a path for the index cache directory.
+Reading symbols from C:\Users\Max\Desktop\gd32_dev\gd32-pio-projects\gd32-arduino-blinky\.pio\build\genericGD32F303CC\firmware.elf...
+PlatformIO Unified Debugger -> http://bit.ly/pio-debug
+PlatformIO: debug_tool = stlink
+PlatformIO: Initializing remote target...
+xPack OpenOCD, x86_64 Open On-Chip Debugger 0.11.0-00155-ge392e485e (2021-03-15-16:44)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+hla_swd
+0x2ba01477
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+Info : tcl server disabled
+Info : telnet server disabled
+Info : clock speed 1000 kHz
+Info : STLINK V2J29M18 (API v2) VID:PID 0483:374B
+Info : Target voltage: 3.250752
+Info : stm32f1x.cpu: hardware has 6 breakpoints, 4 watchpoints
+Info : starting gdb server for stm32f1x.cpu on pipe
+Info : accepting 'gdb' connection from pipe
+[...]
+Temporary breakpoint 1 at 0x8001004: file C:\Users\Max\.platformio\packages\framework-arduinogd32\cores\arduino\main.cpp, line 37.
+PlatformIO: Initialization completed
+(gdb) PlatformIO: Resume the execution to `debug_init_break = tbreak main`
+PlatformIO: More configuration options -> http://bit.ly/pio-debug
+Continuing.
+Note: automatically using hardware breakpoints for read-only addresses.
+
+Temporary breakpoint 1, main ()
+    at C:\Users\Max\.platformio\packages\framework-arduinogd32\cores\arduino\main.cpp:37
+37          setup();
+(gdb) backtrace
+#0  main ()
+    at C:\Users\Max\.platformio\packages\framework-arduinogd32\cores\arduino\main.cpp:37
+```
