@@ -6,6 +6,8 @@
 #include "gd32f3x0.h"
 #elif defined(GD32F30x)
 #include "gd32f30x.h"
+#elif defined(GD32F40x)
+#include "gd32f40x.h"
 #elif defined(GD32E10X)
 #include "gd32e10x.h"
 #endif
@@ -25,7 +27,7 @@ int main(void)
     rcu_periph_clock_enable(LED_CLOCK);
 
     /* set output as output */
-#if defined(GD32F3x0) || defined(GD32F1x0)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F40x)
     gpio_mode_set(LEDPORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LEDPIN);
     gpio_output_options_set(LEDPORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, LEDPIN);
 #else /* valid for GD32F10x, GD32F30x, GD32E10X */
