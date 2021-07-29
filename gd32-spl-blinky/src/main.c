@@ -12,16 +12,36 @@
 #include "gd32e10x.h"
 #endif
 
-/* define blinky LED pin here, default PC13 */
-#ifndef GD32350G_START_BOARD
-#define LEDPORT     GPIOC
-#define LEDPIN      GPIO_PIN_13
-#define LED_CLOCK   RCU_GPIOC
-#else
+#if defined(GD32350G_START_BOARD)
 /* correct LED for GD32350G-START board. PA1 */
-#define LEDPORT     GPIOA
-#define LEDPIN      GPIO_PIN_1
-#define LED_CLOCK   RCU_GPIOA
+  #define LEDPORT     GPIOA
+  #define LEDPIN      GPIO_PIN_1
+  #define LED_CLOCK   RCU_GPIOA
+#elif defined(GD32350C_START)
+/* correct LED for GD32350C-START board. PF6 */
+  #define LEDPORT     GPIOF
+  #define LEDPIN      GPIO_PIN_6
+  #define LED_CLOCK   RCU_GPIOF
+#elif defined(GD32103C_START)
+/* correct LED for GD32103C-START board. PC6 */
+  #define LEDPORT     GPIOC
+  #define LEDPIN      GPIO_PIN_6
+  #define LED_CLOCK   RCU_GPIOC
+#elif defined(GD32307C_EVAL)
+/* correct LED for GD32307C-EVAL board. PC0 */
+  #define LEDPORT     GPIOC
+  #define LEDPIN      GPIO_PIN_0
+  #define LED_CLOCK   RCU_GPIOC
+#elif defined(GD32407V_START)
+/* correct LED for GD32407V-START board. PC6 */
+  #define LEDPORT     GPIOC
+  #define LEDPIN      GPIO_PIN_6
+  #define LED_CLOCK   RCU_GPIOC
+#else
+/* define blinky LED pin here, default PC13 */
+  #define LEDPORT     GPIOC
+  #define LEDPIN      GPIO_PIN_13
+  #define LED_CLOCK   RCU_GPIOC
 #endif
 
 void systick_config(void);
