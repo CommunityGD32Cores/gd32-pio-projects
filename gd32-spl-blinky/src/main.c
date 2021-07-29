@@ -13,9 +13,16 @@
 #endif
 
 /* define blinky LED pin here, default PC13 */
+#ifndef GD32350G_START_BOARD
 #define LEDPORT     GPIOC
 #define LEDPIN      GPIO_PIN_13
 #define LED_CLOCK   RCU_GPIOC
+#else
+/* correct LED for GD32350G-START board. PA1 */
+#define LEDPORT     GPIOA
+#define LEDPIN      GPIO_PIN_1
+#define LED_CLOCK   RCU_GPIOA
+#endif
 
 void systick_config(void);
 void delay_1ms(uint32_t count);
