@@ -36,7 +36,7 @@ OF SUCH DAMAGE.
 #include "drv_usbd_int.h"
 #include "drv_usb_hw.h"
 
-extern volatile usb_core_driver  hid_keyboard;
+extern usb_core_driver  hid_keyboard;
 extern uint32_t usbfs_prescaler;
 
 void usb_timer_irq(void);

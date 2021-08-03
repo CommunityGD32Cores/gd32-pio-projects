@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 
 extern hid_fop_handler fop_handler;
 
-volatile usb_core_driver hid_keyboard;
+usb_core_driver hid_keyboard;
 
 /*!
     \brief      main routine will construct a USB keyboard
