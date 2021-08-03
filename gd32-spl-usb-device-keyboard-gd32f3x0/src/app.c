@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 
 extern hid_fop_handler fop_handler;
 
-usb_core_driver hid_keyboard;
+volatile usb_core_driver hid_keyboard;
 
 /*!
     \brief      main routine will construct a USB keyboard
@@ -71,6 +71,9 @@ int main(void)
     /* check if USB device is enumerated successfully */
     while (USBD_CONFIGURED != hid_keyboard.dev.cur_status) {
     }
+
+    gd_eval_led_init(LED1);
+    gd_eval_led_on(LED1);
 
     while (1) {
         fop_handler.hid_itf_data_process(&hid_keyboard);

@@ -60,13 +60,17 @@ hid_fop_handler fop_handler = {
 */
 static void key_config (void)
 {
+#ifndef USE_ONLY_USERKEY
     /* configure the wakeup key in EXTI mode to remote wakeup */
     gd_eval_key_init(KEY_WAKEUP, KEY_MODE_EXTI);
 
     gd_eval_key_init(KEY_TAMPER, KEY_MODE_GPIO);
+#endif
     gd_eval_key_init(KEY_USER, KEY_MODE_GPIO);
 
+#ifndef USE_ONLY_USERKEY
     exti_interrupt_flag_clear(WAKEUP_KEY_EXTI_LINE);
+#endif
 }
 
 /*!
@@ -77,6 +81,7 @@ static void key_config (void)
 */
 static uint8_t key_state (void)
 {
+#ifndef USE_ONLY_USERKEY
     /* have pressed tamper key */
     if (!gd_eval_key_state_get(KEY_TAMPER)) {
         usb_mdelay(50U);
@@ -94,12 +99,14 @@ static uint8_t key_state (void)
             return CHAR_B;
         }
     }
+#endif
 
     /* have pressed user key */
-    if (!gd_eval_key_state_get(KEY_USER)) {
+    /* logic is: key pressed == HIGH state */
+    if (gd_eval_key_state_get(KEY_USER)) {
         usb_mdelay(50U);
 
-        if (!gd_eval_key_state_get(KEY_USER)) {
+        if (gd_eval_key_state_get(KEY_USER)) {
             return CHAR_C;
         }
     }
@@ -130,10 +137,12 @@ static void hid_key_data_send(usb_dev *udev)
             hid->data[2] = 0x06U;
             break;
         default:
+            hid->data[2] = 0;
             break;
         }
 
         if (0U != hid->data[2]) {
+            //gd_eval_led_toggle(LED1);
             hid_report_send(udev, hid->data, HID_IN_PACKET);
         }
     }

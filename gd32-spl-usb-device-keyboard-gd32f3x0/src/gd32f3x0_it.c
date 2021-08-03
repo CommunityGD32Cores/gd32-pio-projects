@@ -36,7 +36,7 @@ OF SUCH DAMAGE.
 #include "drv_usbd_int.h"
 #include "drv_usb_hw.h"
 
-extern usb_core_driver  hid_keyboard;
+extern volatile usb_core_driver  hid_keyboard;
 extern uint32_t usbfs_prescaler;
 
 void usb_timer_irq(void);
@@ -169,6 +169,7 @@ void TIMER2_IRQHandler(void)
 */
 void EXTI0_1_IRQHandler(void)
 {
+#ifndef USE_ONLY_USERKEY
     if (exti_interrupt_flag_get(WAKEUP_KEY_EXTI_LINE) != RESET) {
         if (hid_keyboard.dev.pm.dev_remote_wakeup) {
             resume_mcu_clk();
@@ -206,6 +207,9 @@ void EXTI0_1_IRQHandler(void)
         /* clear the exti line pending bit */
         exti_interrupt_flag_clear(WAKEUP_KEY_EXTI_LINE);
     }
+#else
+    exti_interrupt_flag_clear(EXTI_0);
+#endif
 }
 
 /*!
