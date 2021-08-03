@@ -101,10 +101,10 @@ OF SUCH DAMAGE.
     #define TX3_FIFO_FS_SIZE                        0U
 #endif /* USB_FS_CORE */
 
-//#define USB_SOF_OUTPUT                              1U
-#define USB_SOF_OUTPUT                              0U
-//#define USB_LOW_POWER                               1U
-#define USB_LOW_POWER                               0U
+#define USB_SOF_OUTPUT                              1U
+//#define USB_SOF_OUTPUT                              0U
+#define USB_LOW_POWER                               1U
+//#define USB_LOW_POWER                               0U
 
 //#define VBUS_SENSING_ENABLED
 
