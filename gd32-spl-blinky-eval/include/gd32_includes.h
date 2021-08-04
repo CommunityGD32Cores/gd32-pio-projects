@@ -15,6 +15,8 @@
     #include "gd32f103e_eval.h"
   #elif defined(GD32107C_EVAL)
     #include "gd32f107c_eval.h"
+  #elif defined(GD32103B_EVAL)
+    #include "gd32f103b_eval.h"
   #endif
 
 /****************************************************************************/
@@ -62,7 +64,6 @@
 /****************************************************************************/
 #elif defined(GD32F30x)
   #include "gd32f30x.h"
-  #include "gd32f30x_it.h"
 
   #if defined(GD32303C_EVAL)
     #include "gd32f303c_eval.h"
@@ -72,6 +73,8 @@
     #include "gd32f307c_eval.h"
   #elif defined(GD32303C_START)
     #include "gd32f303c_start.h"
+  #elif defined(GD32303E_EVAL)
+    #include "gd32f303e_eval.h"
   #elif defined(GD32305R_START)
     #include "gd32f305r_start.h"
   #endif
@@ -81,7 +84,6 @@
 /****************************************************************************/
 #elif defined(GD32F3x0)
   #include "gd32f3x0.h"
-  #include "gd32f3x0_it.h"
 
   #if defined(GD32330C_START)
     #include "gd32f330c_start.h"
@@ -102,7 +104,6 @@
 /****************************************************************************/
 #elif defined(GD32F40x)
   #include "gd32f4xx.h"
-  #include "gd32f4xx_it.h"
 
   #if defined(GD32403Z_EVAL)
     #include "gd32f403z_eval.h"
@@ -121,7 +122,6 @@
 /****************************************************************************/
 #elif defined(GD32E10X)
   #include "gd32e10x.h"
-  #include "gd32e10x_it.h"
 
   #if defined(GD32E103C_START)
     #include "gd32e103c_start.h"
@@ -138,7 +138,6 @@
 /****************************************************************************/
 #elif defined(GD32E20X)
   #include "gd32e20x.h"
-  #include "gd32e20x_it.h"
 
   #if defined(GD32E230C_EVAL)
     #include "gd32e230c_eval.h"
@@ -161,7 +160,6 @@
 /****************************************************************************/
 #elif defined(GD32E50X)
   #include "gd32e50x.h"
-  #include "gd32e50x_it.h"
 
   #if defined(GD32E503C_START)
     #include "gd32e503c_start.h"

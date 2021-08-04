@@ -1,5 +1,5 @@
 /*!
-    \file  gd32f30x_it.h
+    \file  gd32yxxx_it.h
     \brief the header file of the ISR
 
     \version 2017-02-10, V1.0.0, demo for GD32F30x
@@ -36,10 +36,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef GD32F30X_IT_H
-#define GD32F30X_IT_H
+#ifndef GD32YXXX_IT_H
+#define GD32YXXX_IT_H
 
-#include "gd32f30x.h"
 
 /* function declarations */
 /* this function handles NMI exception */
@@ -61,4 +60,4 @@ void PendSV_Handler(void);
 /* this function handles SysTick exception */
 void SysTick_Handler(void);
 
-#endif /* GD32F30X_IT_H */
+#endif /* GD32YXXX_IT_H */

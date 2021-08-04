@@ -1,10 +1,6 @@
 /*!
     \file  systick.c
     \brief the systick configuration file
-
-    \version 2017-02-10, V1.0.0, demo for GD32F30x
-    \version 2018-10-10, V1.1.0, demo for GD32F30x
-    \version 2018-12-25, V2.0.0, demo for GD32F30x
 */
 
 /*
@@ -36,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32f30x.h"
+#include "gd32_includes.h"
 #include "systick.h"
 
 volatile static uint32_t delay;
