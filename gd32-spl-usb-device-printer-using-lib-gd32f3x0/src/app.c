@@ -1,6 +1,6 @@
 /*!
     \file    main.c
-    \brief   USB main routine for HID device(USB keyboard)
+    \brief   main routine will construct a printer device
 
     \version 2020-08-13, V3.0.0, firmware for GD32F3x0
 */
@@ -33,14 +33,12 @@ OF SUCH DAMAGE.
 */
 
 #include "drv_usb_hw.h"
-#include "standard_hid_core.h"
+#include "printer_core.h"
 
-extern hid_fop_handler fop_handler;
-
-usb_core_driver hid_keyboard;
+usb_core_driver usbd_printer;
 
 /*!
-    \brief      main routine will construct a USB keyboard
+    \brief      main routine
     \param[in]  none
     \param[out] none
     \retval     none
@@ -51,12 +49,10 @@ int main(void)
 
     usb_timer_init();
 
-    hid_itfop_register (&hid_keyboard, &fop_handler);
-
-    usbd_init (&hid_keyboard, USB_CORE_ENUM_FS, &hid_desc, &usbd_hid_cb);
+    usbd_init(&usbd_printer, USB_CORE_ENUM_FS, &printer_desc, &usbd_printer_cb);
 
     usb_intr_config();
-
+  
 #ifdef USE_IRC48M
     /* CTC peripheral clock enable */
     rcu_periph_clock_enable(RCU_CTC);
@@ -67,15 +63,8 @@ int main(void)
     while (RESET == ctc_flag_get(CTC_FLAG_CKOK)) {
     }
 #endif /* USE_IRC48M */
-  
-    /* check if USB device is enumerated successfully */
-    while (USBD_CONFIGURED != hid_keyboard.dev.cur_status) {
-    }
 
-    gd_eval_led_init(LED1);
-    gd_eval_led_on(LED1);
-
+    /* Main loop */
     while (1) {
-        fop_handler.hid_itf_data_process(&hid_keyboard);
     }
 }

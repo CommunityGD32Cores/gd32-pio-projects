@@ -1,12 +1,12 @@
 /*!
-    \file    main.c
-    \brief   USB main routine for HID device(USB keyboard)
+    \file  gd32f3x0_it.h
+    \brief the header file of the ISR
 
     \version 2020-08-13, V3.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc. 
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -32,50 +32,33 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "drv_usb_hw.h"
-#include "standard_hid_core.h"
+#ifndef GD32F3X0_IT_H
+#define GD32F3X0_IT_H
 
-extern hid_fop_handler fop_handler;
+#include "usbd_core.h"
 
-usb_core_driver hid_keyboard;
+/* function declarations */
+/* NMI handle function */
+void NMI_Handler(void);
+/* HardFault handle function */
+void HardFault_Handler(void);
+/* MemManage handle function */
+void MemManage_Handler(void);
+/* BusFault handle function */
+void BusFault_Handler(void);
+/* UsageFault handle function */
+void UsageFault_Handler(void);
+/* SVC handle function */
+void SVC_Handler(void);
+/* DebugMon handle function */
+void DebugMon_Handler(void);
+/* PendSV handle function */
+void PendSV_Handler(void);
+/* SysTick handle function */
+void SysTick_Handler(void);
+/* this function handles USB wakeup interrupt handler */
+void USBFS_WKUP_IRQHandler(void);
+/* this function handles USBFS IRQ Handler */
+void USBFS_IRQHandler(void);
 
-/*!
-    \brief      main routine will construct a USB keyboard
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-int main(void)
-{
-    usb_rcu_config();
-
-    usb_timer_init();
-
-    hid_itfop_register (&hid_keyboard, &fop_handler);
-
-    usbd_init (&hid_keyboard, USB_CORE_ENUM_FS, &hid_desc, &usbd_hid_cb);
-
-    usb_intr_config();
-
-#ifdef USE_IRC48M
-    /* CTC peripheral clock enable */
-    rcu_periph_clock_enable(RCU_CTC);
-
-    /* CTC configure */
-    ctc_config();
-
-    while (RESET == ctc_flag_get(CTC_FLAG_CKOK)) {
-    }
-#endif /* USE_IRC48M */
-  
-    /* check if USB device is enumerated successfully */
-    while (USBD_CONFIGURED != hid_keyboard.dev.cur_status) {
-    }
-
-    gd_eval_led_init(LED1);
-    gd_eval_led_on(LED1);
-
-    while (1) {
-        fop_handler.hid_itf_data_process(&hid_keyboard);
-    }
-}
+#endif /* GD32F3X0_IT_H */

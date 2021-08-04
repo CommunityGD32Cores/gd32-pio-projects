@@ -34,15 +34,11 @@ OF SUCH DAMAGE.
 
 #include "gd32f3x0_it.h"
 #include "drv_usbd_int.h"
-#include "drv_usb_hw.h"
 
-extern usb_core_driver  hid_keyboard;
+extern usb_core_driver  usbd_printer;
 extern uint32_t usbfs_prescaler;
 
-void usb_timer_irq(void);
-
-/* local function prototypes ('static') */
-static void resume_mcu_clk(void);
+void usb_timer_irq (void);
 
 /*!
     \brief      this function handles NMI exception
@@ -150,66 +146,14 @@ void SysTick_Handler(void)
 {
 }
 
-/*!
-    \brief      this function handles Timer0 update interrupt request.
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
+/**
+  * @brief  This function handles Timer2 Handler.
+  * @param  None
+  * @retval None
+  */
 void TIMER2_IRQHandler(void)
 {
     usb_timer_irq();
-}
-
-/*!
-    \brief      this function handles EXTI0_IRQ Handler
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void EXTI0_1_IRQHandler(void)
-{
-#ifndef USE_ONLY_USERKEY
-    if (exti_interrupt_flag_get(WAKEUP_KEY_EXTI_LINE) != RESET) {
-        if (hid_keyboard.dev.pm.dev_remote_wakeup) {
-            resume_mcu_clk();
-
-            #ifndef USE_IRC48M
-                rcu_usbfs_clock_config(usbfs_prescaler);
-            #else
-                /* enable IRC48M clock */
-                rcu_osci_on(RCU_IRC48M);
-
-                /* wait till IRC48M is ready */
-                while (SUCCESS != rcu_osci_stab_wait(RCU_IRC48M)) {
-                }
-
-                rcu_ck48m_clock_config(RCU_CK48MSRC_IRC48M);
-            #endif /* USE_IRC48M */
-
-            rcu_periph_clock_enable(RCU_USBFS);
-
-            usb_clock_active(&hid_keyboard);
-
-            usb_rwkup_set(&hid_keyboard);
-
-            for(__IO uint16_t i = 0U; i < 1000U; i++){
-                for(__IO uint16_t i = 0U; i < 200U; i++);
-            }
-
-            usb_rwkup_reset(&hid_keyboard);
-
-            hid_keyboard.dev.cur_status = hid_keyboard.dev.backup_status;
-
-            hid_keyboard.dev.pm.dev_remote_wakeup = 0U;
-        }
-
-        /* clear the exti line pending bit */
-        exti_interrupt_flag_clear(WAKEUP_KEY_EXTI_LINE);
-    }
-#else
-    exti_interrupt_flag_clear(EXTI_0);
-#endif
 }
 
 /*!
@@ -220,25 +164,14 @@ void EXTI0_1_IRQHandler(void)
 */
 void USBFS_WKUP_IRQHandler(void)
 {
-    if (hid_keyboard.bp.low_power) {
-        resume_mcu_clk();
+    if (usbd_printer.bp.low_power) {
+        SystemInit();
 
-        #ifndef USE_IRC48M
-            rcu_usbfs_clock_config(usbfs_prescaler);
-        #else
-            /* enable IRC48M clock */
-            rcu_osci_on(RCU_IRC48M);
-
-            /* wait till IRC48M is ready */
-            while (SUCCESS != rcu_osci_stab_wait(RCU_IRC48M)) {
-            }
-
-            rcu_ck48m_clock_config(RCU_CK48MSRC_IRC48M);
-        #endif /* USE_IRC48M */
+        rcu_usbfs_clock_config(usbfs_prescaler);
 
         rcu_periph_clock_enable(RCU_USBFS);
 
-        usb_clock_active(&hid_keyboard);
+        usb_clock_active(&usbd_printer);
     }
 
     exti_interrupt_flag_clear(EXTI_18);
@@ -252,42 +185,5 @@ void USBFS_WKUP_IRQHandler(void)
 */
 void USBFS_IRQHandler(void)
 {
-    usbd_isr (&hid_keyboard);
-}
-
-/*!
-    \brief      resume mcu clock
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-static void resume_mcu_clk(void)
-{
-    /* enable HSE */
-    rcu_osci_on(RCU_HXTAL);
-
-    /* wait till HSE is ready */
-    while(RESET == rcu_flag_get(RCU_FLAG_HXTALSTB)){
-    }
-
-    /* enable PLL */
-    rcu_osci_on(RCU_PLL_CK);
-
-    /* wait till PLL is ready */
-    while(RESET == rcu_flag_get(RCU_FLAG_PLLSTB)){
-    }
-
-    /* enable PLL */
-    rcu_osci_on(RCU_PLL_CK);
-
-    /* wait till PLL is ready */
-    while(RESET == rcu_flag_get(RCU_FLAG_PLLSTB)){
-    }
-
-    /* select PLL as system clock source */
-    rcu_system_clock_source_config(RCU_CKSYSSRC_PLL);
-
-    /* wait till PLL is used as system clock source */
-    while(RCU_SCSS_PLL != rcu_system_clock_source_get()){
-    }
+    usbd_isr(&usbd_printer);
 }

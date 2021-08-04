@@ -41,10 +41,9 @@ OF SUCH DAMAGE.
 #ifdef GD32350G_START
 #include "gd32f350g_start.h"
 #define USE_ONLY_USERKEY
-//#define USE_IRC48M
-/* place for other boards */
+#elif defined(GD32350R_EVAL)
+#include "gd32f350r_eval.h"
 #endif
-
 /* USB Core and PHY interface configuration */
 
 /****************** USB FS PHY CONFIGURATION *******************************
@@ -102,9 +101,7 @@ OF SUCH DAMAGE.
 #endif /* USB_FS_CORE */
 
 #define USB_SOF_OUTPUT                              1U
-//#define USB_SOF_OUTPUT                              0U
-#define USB_LOW_POWER                               1U
-//#define USB_LOW_POWER                               0U
+#define USB_LOW_POWER                               0U
 
 //#define VBUS_SENSING_ENABLED
 

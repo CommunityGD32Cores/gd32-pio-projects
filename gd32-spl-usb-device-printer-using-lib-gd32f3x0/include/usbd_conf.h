@@ -1,6 +1,6 @@
 /*!
-    \file    main.c
-    \brief   USB main routine for HID device(USB keyboard)
+    \file    usbd_conf.h
+    \brief   the header file of USB device configuration
 
     \version 2020-08-13, V3.0.0, firmware for GD32F3x0
 */
@@ -32,50 +32,23 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "drv_usb_hw.h"
-#include "standard_hid_core.h"
+#ifndef __USBD_CONF_H
+#define __USBD_CONF_H
 
-extern hid_fop_handler fop_handler;
+#include "usb_conf.h"
 
-usb_core_driver hid_keyboard;
+#define USBD_CFG_MAX_NUM                    1U
+#define USBD_ITF_MAX_NUM                    1U
 
-/*!
-    \brief      main routine will construct a USB keyboard
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-int main(void)
-{
-    usb_rcu_config();
+#define USB_STR_DESC_MAX_SIZE               255U
 
-    usb_timer_init();
+#define PRINTER_IN_EP                       EP_IN(1)
+#define PRINTER_OUT_EP                      EP_OUT(1)
 
-    hid_itfop_register (&hid_keyboard, &fop_handler);
+#define USB_STRING_COUNT                    4U
 
-    usbd_init (&hid_keyboard, USB_CORE_ENUM_FS, &hid_desc, &usbd_hid_cb);
+#define PRINTER_DATA_PACKET_SIZE            64U
+#define PRINTER_IN_PACKET                   PRINTER_DATA_PACKET_SIZE
+#define PRINTER_OUT_PACKET                  PRINTER_DATA_PACKET_SIZE
 
-    usb_intr_config();
-
-#ifdef USE_IRC48M
-    /* CTC peripheral clock enable */
-    rcu_periph_clock_enable(RCU_CTC);
-
-    /* CTC configure */
-    ctc_config();
-
-    while (RESET == ctc_flag_get(CTC_FLAG_CKOK)) {
-    }
-#endif /* USE_IRC48M */
-  
-    /* check if USB device is enumerated successfully */
-    while (USBD_CONFIGURED != hid_keyboard.dev.cur_status) {
-    }
-
-    gd_eval_led_init(LED1);
-    gd_eval_led_on(LED1);
-
-    while (1) {
-        fop_handler.hid_itf_data_process(&hid_keyboard);
-    }
-}
+#endif /* __USBD_CONF_H */
