@@ -37,7 +37,7 @@ int _write(int file, char *data, int len)
 
 This example code initializes the USART0 peripheral to send at 115200 baud and the standard 8 databits, no parity, 1 stopbit ("8N1") configuration. 
 
-The example has the capability to choose between two sets of UART pins, since one some hardware one set of pins may be unaccesible or statically connected to e.g. VCC or GND. Without any activated macros, the UART output will be on TX = PA9, RX = PA10. When the `USE_ALTERNATE_USART0_PINS` macro is defined, e.g. via a [`build_flags`](https://docs.platformio.org/en/latest/projectconf/section_env_build.html#build-flags) directive, the output will be on TX = PB6, RX = PB7.
+The example has the capability to choose between two sets of UART pins, since one some hardware one set of pins may be unaccesible or statically connected to e.g. VCC or GND (like the GD32350G-START board). Without any activated macros, the UART output will be on TX = PA9, RX = PA10. When the `USE_ALTERNATE_USART0_PINS` macro is defined, e.g. via a [`build_flags`](https://docs.platformio.org/en/latest/projectconf/section_env_build.html#build-flags) directive, the output will be on TX = PB6, RX = PB7.
 
 Some development boards do not have a USB-UART converter / adapter on board, so you need to make sure to connect one yourself to the right pins. That is,
 * GND (adapter) <--> GND (board)
