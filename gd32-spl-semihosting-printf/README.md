@@ -15,7 +15,7 @@ debug_extra_cmds =
 
 the first triggers the SPL builder script to link in the library required for semihosting (makes `initialise_monitor_handles()` available), the second directive extends the GDB initialization commands to activate semihosting output in OpenOCD. 
 
-To view the printf output, the firmware must be started in debug mode. This is explained in the main readme page of this repository. After debugging has started, switch to the "Debug Console" view in VSCode. Then, set a breakpoint at the `delay_1mms(500);` line and let the firmware advance to this point (play button). Once the firmware hits that breakpoint, the `printf()` output should appear in the debug console tab.
+To view the printf output, the firmware must be started in debug mode. This is explained in the main readme page of this repository. After debugging has started, switch to the "Debug Console" view in VSCode. Then, set a breakpoint at the `delay_1ms(500);` line and let the firmware advance to this point (play button). Once the firmware hits that breakpoint, the `printf()` output should appear in the debug console tab.
 
 ![printf](printf_output.png)
 
