@@ -31,6 +31,8 @@ int _write(int file, char *data, int len)
 }
 ```
 
+**Note** that existing original SPL examples by GigaDevice do not do this, they implement `fputc()` instead, and must be adapted in the above way to work with GCC.
+
 ## UART settings
 
 This example code initializes the USART0 peripheral to send at 115200 baud and the standard 8 databits, no parity, 1 stopbit ("8N1") configuration. 
