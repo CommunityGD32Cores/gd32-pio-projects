@@ -11,7 +11,8 @@
 #endif
 #include <stdio.h>
 
-/* settings for used USART and pin */
+#ifndef USE_ALTERNATE_USART0_PINS
+/* settings for used USART (UASRT0) and pins, TX = PA9, RX = PA10 */
 #define RCU_GPIO            RCU_GPIOA
 #define RCU_UART            RCU_USART0
 #define USART               USART0
@@ -24,18 +25,30 @@
 #define UART_TX_AF  GPIO_AF_1
 #define UART_RX_AF  GPIO_AF_1
 #endif
+#else
+/* settings for USART0 alternate settings, TX = PB6, RX = PB7 */
+#define RCU_GPIO            RCU_GPIOB
+#define RCU_UART            RCU_USART0
+#define USART               USART0
+#define UART_TX_RX_GPIO     GPIOB
+#define UART_TX_GPIO_PIN    GPIO_PIN_6
+#define UART_RX_GPIO_PIN    GPIO_PIN_7
 
-void simple_delay(uint32_t us)
-{
-    /* simple delay loop */
-    while (us--)
-    {
-        asm volatile("nop");
-    }
-}
+/* only for certain series: set pin to alternate function x for UART */
+#if defined(GD32F3x0) || defined(GD32F1x0)
+#define UART_TX_AF  GPIO_AF_0 /* PB6 AF0 is USART0_TX */
+#define UART_RX_AF  GPIO_AF_0 /* PB7 AF0 is USART0_RX */
+#endif
+#endif 
+
+void systick_config(void);
+void delay_1ms(uint32_t count);
 
 int main(void)
 {
+    /* configure systick for more precise delays */
+    systick_config();
+
     /* enable GPIO clock */
     rcu_periph_clock_enable(RCU_GPIO);
 
@@ -70,7 +83,7 @@ int main(void)
     while (1)
     {
         printf("a usart transmit test example! iteration %d\n", i++);
-        simple_delay(10000000UL);
+        delay_1ms(500);
     }
 }
 
@@ -94,4 +107,44 @@ int _write(int file, char *data, int len)
 
     // return # of bytes written - as best we can tell
     return len;
+}
+
+/* code for delaying using the SysTick */
+
+volatile static uint32_t delay;
+
+void systick_config(void)
+{
+    /* setup systick timer for 1000Hz interrupts */
+    if (SysTick_Config(SystemCoreClock / 1000U))
+    {
+        /* capture error */
+        while (1)
+        {
+        }
+    }
+    /* configure the systick handler priority */
+    NVIC_SetPriority(SysTick_IRQn, 0x00U);
+}
+
+void delay_1ms(uint32_t count)
+{
+    delay = count;
+
+    while (0U != delay)
+    {
+    }
+}
+
+void delay_decrement(void)
+{
+    if (0U != delay)
+    {
+        delay--;
+    }
+}
+
+void SysTick_Handler(void)
+{
+    delay_decrement();
 }
