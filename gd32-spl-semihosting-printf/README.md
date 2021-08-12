@@ -19,5 +19,21 @@ To view the printf output, the firmware must be started in debug mode. This is e
 
 ![printf](printf_output.png)
 
+The same can also be achieved purely on the commandline. Start the debugging session as per the readme of this repo, then use the `c` command to continue executing the firmware once you are inside the GDB console.
 
-**Note**: The "Monitor" project task in PlatformIO will **not** show the printf() output, since that starts `miniterm.py` as the serial monitor, which needs a serial port device or a network port to connect to, which this firmware does not provide. We are however looking into creating a small helper script that exposes the SWD semihosting output on a e.g. network port so that the monitor task will work. OpenOCD does not seem to have this capability built-in.
+```
+>pio debug --interface=gdb -x .pioinit
+[...]
+Temporary breakpoint 1, main () at src\app.c:21
+21      {
+(gdb) c 
+Continuing.
+Hello, world!
+This message should be delivered in the debug console window via semihosting,
+which only needs a SWD capable debug probe instead of a UART adapter.
+Some test values: 123, 0x456, "abc"
+...
+```
+
+## Notes on the "Monitor  Task
+The "Monitor" project task in PlatformIO will **not** show the printf() output, since that starts `miniterm.py` as the serial monitor, which needs a serial port device or a network port to connect to, which this firmware does not provide. We are however looking into creating a small helper script that exposes the SWD semihosting output on a e.g. network port so that the monitor task will work. OpenOCD does not seem to have this capability built-in.
