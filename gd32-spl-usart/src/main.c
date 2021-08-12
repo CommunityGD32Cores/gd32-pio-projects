@@ -79,6 +79,9 @@ int main(void)
     usart_transmit_config(USART, USART_TRANSMIT_ENABLE);
     usart_enable(USART);
 
+    /* short delay to make sure that the serial monitor was started before we print something */
+    delay_1ms(500);
+
     int i = 0;
     while (1)
     {
