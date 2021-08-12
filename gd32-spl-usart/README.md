@@ -54,7 +54,7 @@ A handy shortcut though is the "Upload and Monitor" project task, doing a build,
 
 ![VSCode UART output](vscode_uart.png)
 
-The same can be achieved using the commandline. For a stand-alone serial monitor (after the firmware has already been uploaded), the command [`pio device monitor`](https://docs.platformio.org/en/latest/core/userguide/device/cmd_monitor.html) can be used. However, the same shortcut as in VSCode can be used, doing a build + upload + monitor in one go, by using multiple `-t` (target) switches in the standard [`pio run`](https://docs.platformio.org/en/latest/core/userguide/remote/cmd_run.html) command, with `pio run -t upload -t monitor`. 
+The same can be achieved using the commandline. For a stand-alone serial monitor (after the firmware has already been uploaded), the command [`pio device monitor`](https://docs.platformio.org/en/latest/core/userguide/device/cmd_monitor.html) can be used. However, the same shortcut as in VSCode can be used, doing a build + upload + monitor in one go, by using multiple `-t` (target) switches in the standard [`pio run`](https://docs.platformio.org/en/latest/core/userguide/remote/cmd_run.html) command, with `pio run -e <environment name> -t upload -t monitor`. 
 
 ```
 > pio run -e gd32350g_start -t upload -t monitor
