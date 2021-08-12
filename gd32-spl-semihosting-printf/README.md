@@ -6,7 +6,7 @@ This example makes use of the semihosting capabilities of the SWD probe. No USB-
 
 The `platformio.ini` does
 
-```
+```ini
 board_debug.semihosting = yes
 debug_extra_cmds = 
     monitor arm semihosting enable
