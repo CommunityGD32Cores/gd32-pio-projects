@@ -35,5 +35,5 @@ Some test values: 123, 0x456, "abc"
 ...
 ```
 
-## Notes on the "Monitor  Task
+## Notes on the "Monitor" Task
 The "Monitor" project task in PlatformIO will **not** show the printf() output, since that starts `miniterm.py` as the serial monitor, which needs a serial port device or a network port to connect to, which this firmware does not provide. We are however looking into creating a small helper script that exposes the SWD semihosting output on a e.g. network port so that the monitor task will work. OpenOCD does not seem to have this capability built-in.
