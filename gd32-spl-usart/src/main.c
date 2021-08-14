@@ -6,8 +6,14 @@
 #include "gd32f3x0.h"
 #elif defined(GD32F30x)
 #include "gd32f30x.h"
+#elif defined(GD32F4xx)
+#include "gd32f4xx.h"
+#elif defined(GD32F403)
+#include "gd32f403.h"
 #elif defined(GD32E10X)
 #include "gd32e10x.h"
+#else
+#error "Unknown chip series"
 #endif
 #include <stdio.h>
 
@@ -21,7 +27,7 @@
 #define UART_RX_GPIO_PIN    GPIO_PIN_10
 
 /* only for certain series: set pin to alternate function x for UART */
-#if defined(GD32F3x0) || defined(GD32F1x0)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx)
 #define UART_TX_AF  GPIO_AF_1
 #define UART_RX_AF  GPIO_AF_1
 #endif
@@ -35,7 +41,7 @@
 #define UART_RX_GPIO_PIN    GPIO_PIN_7
 
 /* only for certain series: set pin to alternate function x for UART */
-#if defined(GD32F3x0) || defined(GD32F1x0)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx)
 #define UART_TX_AF  GPIO_AF_0 /* PB6 AF0 is USART0_TX */
 #define UART_RX_AF  GPIO_AF_0 /* PB7 AF0 is USART0_RX */
 #endif
@@ -56,7 +62,7 @@ int main(void)
     rcu_periph_clock_enable(RCU_UART);
 
     /* connect port to USARTx_Tx and USARTx_Rx  */
-#if defined(GD32F3x0) || defined(GD32F1x0)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx)
     gpio_af_set(UART_TX_RX_GPIO, UART_TX_AF, UART_TX_GPIO_PIN);
     gpio_af_set(UART_TX_RX_GPIO, UART_RX_AF, UART_RX_GPIO_PIN);
 

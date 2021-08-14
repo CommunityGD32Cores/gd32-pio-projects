@@ -100,14 +100,12 @@
   #endif
 
 /****************************************************************************/
-/* GD32F4x0 Familiy                                                         */
+/* GD32F4xx Familiy                                                         */
 /****************************************************************************/
-#elif defined(GD32F40x)
+#elif defined(GD32F4xx)
   #include "gd32f4xx.h"
 
-  #if defined(GD32403Z_EVAL)
-    #include "gd32f403z_eval.h"
-  #elif defined(GD32407R_START)
+  #if defined(GD32407R_START)
     #include "gd32f407r_start.h"
   #elif defined(GD32407V_START)
     #include "gd32f407v_start.h"
@@ -116,6 +114,16 @@
   #elif defined(GD32450Z_EVAL)
     #include "gd32f450z_eval.h"
   #endif
+
+/****************************************************************************/
+/* GD32F403 Familiy                                                         */
+/****************************************************************************/
+#elif defined(GD32F03)
+  #include "gd32f403.h"
+
+  #if defined(GD32403Z_EVAL)
+  #include "gd32f403z_eval.h"
+#endif
 
 /****************************************************************************/
 /* GD32E10x Familiy                                                         */
