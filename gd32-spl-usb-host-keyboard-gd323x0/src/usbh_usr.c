@@ -38,6 +38,15 @@ OF SUCH DAMAGE.
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <qwertz_keyboard_decoding.h>
+#include "drv_usb_hw.h" /* only for usb_mdelay */
+
+typedef enum {
+    DISPLAY_KEY_INFO,
+    WRITE_TEXT
+} ApplicationMode;
+
+ApplicationMode curAppMode = DISPLAY_KEY_INFO;
 
 extern int16_t XLoc, YLoc;
 extern __IO int16_t PrevX, PrevY;
@@ -164,8 +173,8 @@ void usbh_user_device_desc_available(void *device_desc)
 {
     usb_desc_dev *pDevStr = device_desc;
 
-    printf("VID: %04Xh\n", (unsigned)pDevStr->idVendor);
-    printf("PID: %04Xh\n", (unsigned)pDevStr->idProduct);
+    printf("VID: 0x%04X\n", (unsigned)pDevStr->idVendor);
+    printf("PID: 0x%04X\n", (unsigned)pDevStr->idProduct);
 }
 
 /*!
@@ -266,14 +275,34 @@ void usbh_user_device_not_supported(void)
 */
 usbh_user_status usbh_user_userinput(void)
 {
-    usbh_user_status usbh_usr_status = USBH_USER_NO_RESP;
+    //always automatically start the demo
+    //as soon as the device is connected.
+    return USBH_USER_RESP_OK;
+}
 
+uint8_t old_state = RESET; 
+void poll_user_key() {
     /*Key USER is in polling mode to detect user action */
-    if(RESET == gd_eval_key_state_get(KEY_USER)){
-        usbh_usr_status = USBH_USER_RESP_OK;
-    }
-
-    return usbh_usr_status;
+    uint8_t new_state = gd_eval_key_state_get(KEY_USER);
+    if(SET == new_state && old_state != new_state){
+        usb_mdelay(100);
+        if(SET == gd_eval_key_state_get(KEY_USER)){
+            //switch app mode 
+            curAppMode = curAppMode == DISPLAY_KEY_INFO 
+                        ? WRITE_TEXT : DISPLAY_KEY_INFO;
+            if(curAppMode == WRITE_TEXT) {
+                printf("\n== ENTERED WRITE TEXT MODE ==\n");
+                printf("> Start typing on the keyboard\n");
+                printf("> And the text shall be saved and displayed.\n");
+            } else {
+                printf("\n== ENTERED DISPLAY KEY INFO MODE ==\n");
+                printf("> Start typing on the keyboard\n");
+                printf("> And info about the received scancodes and symbols\n");
+                printf("> shall be displayed.\n");
+            }
+        }
+    } 
+    old_state = new_state;
 }
 
 /*!
@@ -343,229 +372,122 @@ void usr_keybrd_init (void)
 
 }
 
-#define CASE_SCANCODE(scancode, decoded_str) case (scancode): return (decoded_str)
-
-/* german keyboard layout (QWERTZ) */
-/*
-* ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
-* │ ^ │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │ 0 │ ß │ ´ │       │
-* ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
-* │     │ Q │ W │ E │ R │ T │ Z │ U │ I │ O │ P │ Ü │ + │     │
-* ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
-* │      │ A │ S │ D │ F │ G │ H │ J │ K │ L │ Ö │ Ä │ # │    │
-* ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
-* │    │ < │ Y │ X │ C │ V │ B │ N │ M │ , │ . │ - │          │
-* ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
-* │    │    │    │                        │    │    │    │    │
-* └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
-*/
-
-const char* get_str_for_scancode_qwertz(uint8_t scancode, bool is_shift_pressed, bool is_alt_gr_pressed, bool* err) {
-    if(!err) return "";
-
-    if(is_shift_pressed) {
-        //uppercase
-        *err = true;
-        return "";
-    } else if(is_alt_gr_pressed) {
-        //only specific symbols are mapable at all
-        switch(scancode) {
-            CASE_SCANCODE(KEY_2_AT, "²");
-            CASE_SCANCODE(KEY_3_NUMBER_SIGN, "³");
-            CASE_SCANCODE(KEY_7_AMPERSAND, "{");
-            CASE_SCANCODE(KEY_8_ASTERISK, "[");
-            CASE_SCANCODE(KEY_9_OPARENTHESIS, "]");
-            CASE_SCANCODE(KEY_0_CPARENTHESIS, "}");
-            CASE_SCANCODE(KEY_MINUS_UNDERSCORE, "\\");
-            CASE_SCANCODE(KEY_Q, "@");
-            CASE_SCANCODE(KEY_E, "€");
-            CASE_SCANCODE(KEY_CBRACKET_AND_CBRACE, "~");
-            CASE_SCANCODE(KEY_NONUS_BACK_SLASH_VERTICAL_BAR, "<");
-            CASE_SCANCODE(KEY_M, "µ");
-            default: *err = true; return "";
-        }
-    } else {
-        //'normal' lowercase
-        switch(scancode) {
-            CASE_SCANCODE(KEY_GRAVE_ACCENT_AND_TILDE, "^");
-            CASE_SCANCODE(KEY_1_EXCLAMATION_MARK, "1");
-            CASE_SCANCODE(KEY_2_AT, "2");
-            CASE_SCANCODE(KEY_3_NUMBER_SIGN, "3");
-            CASE_SCANCODE(KEY_4_DOLLAR, "4");
-            CASE_SCANCODE(KEY_5_PERCENT, "5");
-            CASE_SCANCODE(KEY_6_CARET, "6");
-            CASE_SCANCODE(KEY_7_AMPERSAND, "7");
-            CASE_SCANCODE(KEY_8_ASTERISK, "8");
-            CASE_SCANCODE(KEY_9_OPARENTHESIS, "9");
-            CASE_SCANCODE(KEY_0_CPARENTHESIS, "0");
-            CASE_SCANCODE(KEY_MINUS_UNDERSCORE, "ß");
-            CASE_SCANCODE(KEY_EQUAL_PLUS, "´");
-            CASE_SCANCODE(KEY_Q, "q");
-            CASE_SCANCODE(KEY_W, "w");
-            CASE_SCANCODE(KEY_E, "e");
-            CASE_SCANCODE(KEY_R, "r");
-            CASE_SCANCODE(KEY_T, "t");
-            CASE_SCANCODE(KEY_Y, "z");
-            CASE_SCANCODE(KEY_U, "u");
-            CASE_SCANCODE(KEY_I, "i");
-            CASE_SCANCODE(KEY_O, "o");
-            CASE_SCANCODE(KEY_P, "p");
-            CASE_SCANCODE(KEY_OBRACKET_AND_OBRACE, "ü");
-            CASE_SCANCODE(KEY_CBRACKET_AND_CBRACE, "+");
-            CASE_SCANCODE(KEY_A, "a");
-            CASE_SCANCODE(KEY_S, "s");
-            CASE_SCANCODE(KEY_D, "d");
-            CASE_SCANCODE(KEY_F, "f");
-            CASE_SCANCODE(KEY_G, "g");
-            CASE_SCANCODE(KEY_H, "h");
-            CASE_SCANCODE(KEY_J, "j");
-            CASE_SCANCODE(KEY_K, "k");
-            CASE_SCANCODE(KEY_L, "l");
-            CASE_SCANCODE(KEY_SEMICOLON_COLON, "ö");
-            CASE_SCANCODE(KEY_SINGLE_AND_DOUBLE_QUOTE, "ä");
-            CASE_SCANCODE(KEY_NONUS_NUMBER_SIGN_TILDE, "#");
-            CASE_SCANCODE(KEY_NONUS_BACK_SLASH_VERTICAL_BAR, "<");
-            CASE_SCANCODE(KEY_Z, "y");
-            CASE_SCANCODE(KEY_X, "x");
-            CASE_SCANCODE(KEY_C, "c");
-            CASE_SCANCODE(KEY_V, "v");
-            CASE_SCANCODE(KEY_B, "b");
-            CASE_SCANCODE(KEY_N, "n");
-            CASE_SCANCODE(KEY_M, "m");
-            CASE_SCANCODE(KEY_COMMA_AND_LESS, ",");
-            CASE_SCANCODE(KEY_DOT_GREATER, ".");
-            CASE_SCANCODE(KEY_SLASH_QUESTION, "-");
-            //special keys which are always the same
-            CASE_SCANCODE(KEY_KEYPAD_1_END, "1");
-            CASE_SCANCODE(KEY_KEYPAD_2_DOWN_ARROW, "2");
-            CASE_SCANCODE(KEY_KEYPAD_3_PAGEDN, "3");
-            CASE_SCANCODE(KEY_KEYPAD_4_LEFT_ARROW, "4");
-            CASE_SCANCODE(KEY_KEYPAD_5, "5");
-            CASE_SCANCODE(KEY_KEYPAD_6_RIGHT_ARROW, "6");
-            CASE_SCANCODE(KEY_KEYPAD_7_HOME, "7");
-            CASE_SCANCODE(KEY_KEYPAD_8_UP_ARROW, "8");
-            CASE_SCANCODE(KEY_KEYPAD_9_PAGEUP, "9");
-            CASE_SCANCODE(KEY_KEYPAD_0_INSERT, "0");
-            CASE_SCANCODE(KEY_ESCAPE, "ESC");
-            CASE_SCANCODE(KEY_F1, "F1");
-            CASE_SCANCODE(KEY_F2, "F2");
-            CASE_SCANCODE(KEY_F3, "F3");
-            CASE_SCANCODE(KEY_F4, "F4");
-            CASE_SCANCODE(KEY_F5, "F5");
-            CASE_SCANCODE(KEY_F6, "F6");
-            CASE_SCANCODE(KEY_F7, "F7");
-            CASE_SCANCODE(KEY_F8, "F8");
-            CASE_SCANCODE(KEY_F9, "F9");
-            CASE_SCANCODE(KEY_F10, "F10");
-            CASE_SCANCODE(KEY_F11, "F11");
-            CASE_SCANCODE(KEY_F12, "F12");
-            CASE_SCANCODE(KEY_BACKSPACE, "BACKSPACE");
-            CASE_SCANCODE(KEY_ENTER, "ENTER");
-            CASE_SCANCODE(KEY_KEYPAD_ENTER, "ENTER(Keypad)");
-            CASE_SCANCODE(KEY_TAB, "TAB");
-            CASE_SCANCODE(KEY_CAPS_LOCK, "CAPSLOCK");
-            CASE_SCANCODE(KEY_DOWNARROW, "ARROW_DOWN");
-            CASE_SCANCODE(KEY_UPARROW, "ARROW_UP");
-            CASE_SCANCODE(KEY_RIGHTARROW, "ARROW_LEFT");
-            CASE_SCANCODE(KEY_LEFTARROW, "ARROW_RIGHT");
-            CASE_SCANCODE(KEY_PRINTSCREEN, "PRINTSCREEN");
-            CASE_SCANCODE(KEY_SCROLL_LOCK, "SCROLLLOCK");
-            CASE_SCANCODE(KEY_PAUSE, "PAUSE");
-            CASE_SCANCODE(KEY_INSERT, "INS"); //"einfg"
-            CASE_SCANCODE(KEY_DELETE, "DEL"); //"entf"
-            CASE_SCANCODE(KEY_HOME, "HOME"); //"pos1"
-            CASE_SCANCODE(KEY_END1, "END"); //"ende"
-            CASE_SCANCODE(KEY_PAGEUP, "PAGEUP"); //"Bild-hoch"
-            CASE_SCANCODE(KEY_PAGEDOWN, "PAGEDOWN"); //"Bild-runter"
-            CASE_SCANCODE(KEY_KEYPAD_SLASH, "÷");
-            CASE_SCANCODE(KEY_KEYPAD_ASTERIKS, "×");
-            CASE_SCANCODE(KEY_KEYPAD_MINUS, "-");
-            CASE_SCANCODE(KEY_KEYPAD_PLUS, "+");
-            CASE_SCANCODE(KEY_KEYPAD_COMMA, ",");
-            CASE_SCANCODE(KEY_KEYPAD_NUM_LOCK_AND_CLEAR, "NUMPAD");
-            default: *err = true; return "";
-        }
-        return "";
-    }
-}
-
 /* callback for full data (made possible by a library modification) */
 #ifdef PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK
 static hid_keybd_info oldKeybdState;
+//1 kilobyte of write buffer
+#define WRITE_BUF_LEN 1024
+static char write_buf[WRITE_BUF_LEN + 1];
+static int cur_write_index = 0;
 
 void usr_keybrd_process_data_full(hid_keybd_info* k_pinfo) {
     //if new state is not old state
     if(memcmp(&oldKeybdState, k_pinfo, sizeof(hid_keybd_info)) != 0) {
 
-        //quick check if all keys are released
-        bool atleast_one_key_pressed = false;
-        for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
-            if(k_pinfo->keys[i] != KEY_NONE) {
-                atleast_one_key_pressed = true;
-            }
-        }
-        atleast_one_key_pressed |= k_pinfo->lctrl ||k_pinfo->lshift ||k_pinfo->lalt ||k_pinfo->lgui 
-                                    || k_pinfo->rctrl || k_pinfo->rshift || k_pinfo->ralt || k_pinfo->rgui;
-        if(!atleast_one_key_pressed) {
-            printf("< all keys released >\n");
+        if(curAppMode == WRITE_TEXT) {
             oldKeybdState = *k_pinfo;
-            return;
-        }
-
-        //print keys
-        printf("Pressed Keys (scancodes):");
-        atleast_one_key_pressed = false;
-        for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
-            if(k_pinfo->keys[i] != KEY_NONE) {
-                printf(" %d", (int) k_pinfo->keys[i]);
-                atleast_one_key_pressed = true;
-            }
-        }
-        if(!atleast_one_key_pressed) {
-            printf(" (all released)");
-        }
-        printf("\n");
-
-        printf("Pressed Keys (symbol):");
-        atleast_one_key_pressed = false;
-        for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
-            if(k_pinfo->keys[i] != KEY_NONE) {
-                bool err = false;
-                const char* szSymbol = get_str_for_scancode_qwertz(k_pinfo->keys[i], k_pinfo->lshift != 0, k_pinfo->ralt != 0, &err);
-                if(!err) {
-                    printf(" %s", szSymbol);
-                } else {
-                    printf(" <unknown>");
+            for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
+                uint8_t scancode = k_pinfo->keys[i]; 
+                if(scancode != KEY_NONE) {
+                    bool err = false;
+                    const char* szSymbol = get_str_for_scancode_qwertz(scancode, k_pinfo->lshift != 0, k_pinfo->ralt != 0, &err);
+                    if(scancode == KEY_ENTER) {
+                        szSymbol = "\r\n";
+                        err = false;
+                    } else if(scancode == KEY_SPACEBAR) {
+                        szSymbol = " ";
+                        err = false;
+                    } else if(scancode == KEY_BACKSPACE) {
+                        if(cur_write_index > 0) {
+                            write_buf[cur_write_index - 1] = '\0';
+                            cur_write_index--;
+                        }
+                        continue;
+                    }
+                    if(!err) {
+                        //write symbol into buffer
+                        //may be multiple bytes due to encoding of special chars 
+                        size_t num_to_write = strlen(szSymbol);
+                        size_t num_free = WRITE_BUF_LEN - cur_write_index;
+                        if(num_free >= num_to_write) {
+                            memcpy(write_buf + cur_write_index, szSymbol, num_to_write);
+                            cur_write_index += num_to_write;
+                        } else {
+                            printf("\nBUFFER FULL! Clearing.\n");
+                            memset(write_buf, 0, sizeof(write_buf));
+                            cur_write_index = 0;
+                        }                        
+                    } else {
+                        printf(" <unknown>");
+                    }
                 }
-                atleast_one_key_pressed = true;
             }
-        }
-        if(!atleast_one_key_pressed) {
-            printf(" (all released)");
-        }
-        printf("\n");
+            printf("Write buffer (%d bytes):\n%s\n", cur_write_index, write_buf);
+        } else {
+            //quick check if all keys are released
+            bool atleast_one_key_pressed = false;
+            for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
+                if(k_pinfo->keys[i] != KEY_NONE) {
+                    atleast_one_key_pressed = true;
+                }
+            }
+            atleast_one_key_pressed |= k_pinfo->lctrl ||k_pinfo->lshift ||k_pinfo->lalt ||k_pinfo->lgui 
+                                        || k_pinfo->rctrl || k_pinfo->rshift || k_pinfo->ralt || k_pinfo->rgui;
+            if(!atleast_one_key_pressed) {
+                printf("< all keys released >\n");
+                oldKeybdState = *k_pinfo;
+                return;
+            }
+
+            //print keys
+            printf("Pressed Keys (scancodes):");
+            atleast_one_key_pressed = false;
+            for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
+                if(k_pinfo->keys[i] != KEY_NONE) {
+                    printf(" %d", (int) k_pinfo->keys[i]);
+                    atleast_one_key_pressed = true;
+                }
+            }
+            printf("\n");
+
+            printf("Pressed Keys (symbol):");
+            atleast_one_key_pressed = false;
+            for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
+                if(k_pinfo->keys[i] != KEY_NONE) {
+                    bool err = false;
+                    const char* szSymbol = get_str_for_scancode_qwertz(k_pinfo->keys[i], k_pinfo->lshift != 0, k_pinfo->ralt != 0, &err);
+                    if(!err) {
+                        printf(" %s", szSymbol);
+                    } else {
+                        printf(" <unknown>");
+                    }
+                    atleast_one_key_pressed = true;
+                }
+            }
+            printf("\n");
 
 
-        //check for modifier keys
-        const char* modifier_names[] = {
-            "state", "lctrl", "lshift",
-            "lalt", "lgui", "rctrl",
-            "rshift", "ralt", "rgui"
-        };
-        uint8_t modifier_vals[] = {
-            k_pinfo->state, k_pinfo->lctrl, k_pinfo->lshift,
-            k_pinfo->lalt, k_pinfo->lgui, k_pinfo->rctrl,
-            k_pinfo->rshift, k_pinfo->ralt, k_pinfo->rgui
-        };
-        printf("Modifier Keys:");
-        for(int i=0; i < sizeof(modifier_names) / sizeof(*modifier_names); i++) {
-            if(modifier_vals[i] != 0) {
-                printf(" %s", modifier_names[i]);
+            //check for modifier keys
+            const char* modifier_names[] = {
+                "lctrl", "lshift",
+                "lalt", "lgui", "rctrl",
+                "rshift", "ralt", "rgui"
+            };
+            uint8_t modifier_vals[] = {
+                k_pinfo->lctrl, k_pinfo->lshift,
+                k_pinfo->lalt, k_pinfo->lgui, k_pinfo->rctrl,
+                k_pinfo->rshift, k_pinfo->ralt, k_pinfo->rgui
+            };
+            printf("Modifier Keys:");
+            for(int i=0; i < sizeof(modifier_names) / sizeof(*modifier_names); i++) {
+                if(modifier_vals[i] != 0) {
+                    printf(" %s", modifier_names[i]);
+                }
             }
+            printf("\n");
+        
+            oldKeybdState = *k_pinfo;
         }
-        printf("\n");
-       
-        oldKeybdState = *k_pinfo;
     }
 }
 #else 

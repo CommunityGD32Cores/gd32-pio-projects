@@ -71,5 +71,7 @@ int main(void)
     while (1) {
         /* Host state handler */
         usbh_core_task (&usb_host);
+        /* poll user button */
+        poll_user_key();
     }
 }

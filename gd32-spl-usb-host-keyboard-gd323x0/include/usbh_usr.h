@@ -89,4 +89,7 @@ void usr_keybrd_init(void);
 /* process keyboard data */
 void usr_keybrd_process_data(uint8_t data);
 
+/* poll user key */
+void poll_user_key();
+
 #endif /*__USBH_USR_H */
