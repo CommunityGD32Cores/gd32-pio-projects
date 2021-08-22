@@ -342,6 +342,52 @@ void usr_keybrd_init (void)
 
 }
 
+/* callback for full data (made possible by a library modification) */
+#ifdef PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK
+#include <stdbool.h>
+static hid_keybd_info oldKeybdState;
+
+void usr_keybrd_process_data_full(hid_keybd_info* k_pinfo) {
+    //if new state is not old state
+    if(memcmp(&oldKeybdState, k_pinfo, sizeof(hid_keybd_info)) != 0) {
+
+        printf("Pressed Keys:");
+        //print keys
+        bool atleast_one_key_pressed = false;
+        for(int i=0; i < sizeof(k_pinfo->keys) / sizeof(k_pinfo->keys[0]); i++) {
+            if(k_pinfo->keys[i] != KEY_NONE) {
+                printf(" %d", (int) k_pinfo->keys[i]);
+                atleast_one_key_pressed = true;
+            }
+        }
+        if(!atleast_one_key_pressed) {
+            printf(" (all released)");
+        }
+        printf("\n");
+        //check for modifier keys
+        const char* modifier_names[] = {
+            "state", "lctrl", "lshift",
+            "lalt", "lgui", "rctrl",
+            "rshift", "ralt", "rgui"
+        };
+        uint8_t modifier_vals[] = {
+            k_pinfo->state, k_pinfo->lctrl, k_pinfo->lshift,
+            k_pinfo->lalt, k_pinfo->lgui, k_pinfo->rctrl,
+            k_pinfo->rshift, k_pinfo->ralt, k_pinfo->rgui
+        };
+        printf("Modifier Keys:");
+        for(int i=0; i < sizeof(modifier_names) / sizeof(*modifier_names); i++) {
+            if(modifier_vals[i] != 0) {
+                printf(" %s", modifier_names[i]);
+            }
+        }
+        printf("\n");
+       
+        oldKeybdState = *k_pinfo;
+    }
+}
+#else 
+/* old behavior */
 /*!
     \brief      process keyboard data
     \param[in]  data: keyboard data to be displayed
@@ -352,6 +398,7 @@ void usr_keybrd_process_data (uint8_t data)
 {
     printf("> Keyboard pressed: '%c' (%02x)\n", (char)data, (int)data);
 }
+#endif
 
 /*!
     \brief      de-init user state and associated variables
