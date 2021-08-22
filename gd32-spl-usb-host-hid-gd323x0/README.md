@@ -8,6 +8,36 @@ It allows a USB HID device (a keyboard or a mouse) to be connected to the microc
 
 **Note**: For the keyboard demo, if `PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK` is activated in the `platformio.ini`, a QWERTZ layout decoding is performed. Otherwise, a QWERTY layout is used.
 
+## Pinout
+
+This USB example is currently primarily supporting these boards: 
+* GD32350G-START
+* GD32350R-EVAL
+
+However, it can be easily expanded for other GD32F3x0 boards. Important things are:
+
+1. The `HOST_POWERSW_x` definitions in `gd32f3x0_usb_hw.c`. It defines the GPIO pin which is driven by microcontroller to allow the USB bus to be powered. This pin is usually connected to PNP transistor which itself is connected between +5V and VBUS of the USB port.
+2. For `usbh_usr.c` it interacts with a button via a GPIO pin and the functions `gd_eval_key_init()` and `gd_eval_key_state_get()`. These are supplied in the board support package files for a GigaDevice-made development board, but can also be self-supplied if the target board is not a GigaDevice development board
+
+As for the main text output of the firmare, the file `printf_over_x.c` implements transporting `printf()` output via
+* UART0 (TX=PA9)
+* UART0 (TX=PB6) (if the macro `USE_ALTERNATE_USART0_PINS` is set)
+* SWD Semihosting (if the macro `PRINTF_VIA_SEMIHOSTING` is set)
+
+It is highly recommended to use UART for the output since semihosting is extremely slow and blocking and can thus disturb USB bus operations.
+
+Alternative UART pins are implemented since some boards (such as the GD32350G-START) have the default PA9 output pin connected to somewhere else, non-accessible. See the [gd32-spl-usart](https://github.com/CommunityGD32Cores/gd32-pio-projects/tree/main/gd32-spl-usart#uart-settings) page for more detailed information.
+
+Lastly, it is important to notice that for most development boards from GigaDevice, power to the USB bus can only be supplied via a barrel-jack connector on the board and not one of the USB ports (the other USB port for the GDLink does not feed power into the board). Consult your board's schematic / user manual for more information. In the case of e.g. the [GD32350G-START schematics](https://github.com/CommunityGD32Cores/gigadevice-firmware-and-docs/blob/main/GD32F3x0/GD32F3x0_Demo_Suites_V2.1.0/GD32350G_START_Demo_Suites/Docs/Schematic/GD32350G-START-V1.0.pdf), one can see that +5V and GND must be supplied to the barrel-jack connector CN4 (center-positive), e.g. from an external lab-bench power supply or a spliced-up USB cable. 
+
+Additionally, since most boards feature a USB mini-B plug that is connected to the main microcontroller, a converter cable to a female USB-A jack is needed to be able to plug a e.g. USB keyboard into it.
+
+## Media
+
+Example setup with a GD32350G-START board, powered by a lab-bench power supply at 5.0V. The power switch next the barrel-jack connector is additionally set to the left position ("power from barrel-jack"). An external USB-UART converter is additionally connected to PB6. The common GND is implicit since the GDLink of the board is connected to the same USB hub as the USB-UART converter and thus they share the same GND. A USB mini-B to USB-A (female) converter cable is used to be able to plug a USB device into the board.
+
+![setup](setup.jpg)
+
 ## Example output
 
 When connecting a keyboard and is commented out `PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK` in the `platformio.ini`:
