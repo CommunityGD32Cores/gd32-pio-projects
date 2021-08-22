@@ -1,4 +1,4 @@
-# SPL USB Host Keyboard example
+# SPL USB Host HID example
 
 ## Description
 
