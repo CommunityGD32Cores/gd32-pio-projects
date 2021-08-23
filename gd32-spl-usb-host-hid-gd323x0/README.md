@@ -94,7 +94,7 @@ Modifier Keys: lshift
 < all keys released >
 ```
 
-In the above mode, one can also press the user key to switch to a primitive "write text" mode. The input keys are not debounced, so double-typing characters can easily occur. For simple demonstration purposes only.
+In the above mode, one can also press the user key (on demo boards also labeled "User Key") to switch to a primitive "write text" mode. The input keys are not debounced, so double-typing characters can easily occur. For simple demonstration purposes only.
 
 ```
 == ENTERED WRITE TEXT MODE ==
