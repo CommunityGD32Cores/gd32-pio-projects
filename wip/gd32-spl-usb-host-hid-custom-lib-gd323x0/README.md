@@ -1,10 +1,14 @@
 # SPL USB Host HID example
 
+## Work-In-Progress!
+
 ## Description
 
 This an example firmware adapted from `GD32F3x0_Firmware_Library_V2.1.1\Examples\USBFS\USB_Host\usb_host_hid_keyboard_mouse\`.
 
-It allows a USB HID device (a keyboard or a mouse) to be connected to the microcontroller.
+It allows a USB HID device (a keyboard, a mouse or an XBox360 Gamepad) to be connected to the microcontroller.
+
+The initialization and decoding of the XBox360 controller is currently work in progress. Initialization commends are missing, as well as restoring the mouse and keyboard functionality that is currently not working as experiments are done in the USB stack.
 
 **Note**: For the keyboard demo, if `PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK` is activated in the `platformio.ini`, a QWERTZ layout decoding is performed. Otherwise, a QWERTY layout is used.
 
