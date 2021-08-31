@@ -1,0 +1,30 @@
+{
+    "name": "GD32F3x0_usbfs_library_custom",
+    "description": "USB Full-Speed library for GD32F3x0 devices",
+    "keywords": "usb,gd32",
+    "authors": {
+        "name": "GigaDevice"
+    },
+    "version": "3.0.0",
+    "license": "BSD-3",
+    "platforms": [
+        "gd32"
+    ],
+    "frameworks": "*",
+    "build": {
+        "flags": [
+            "-Idriver/Include",
+            "-Ihost/core/Include",
+            "-Idevice/core/Include",
+            "-Iustd/common",
+            "-Iustd/class/cdc",
+            "-Iustd/class/hid",
+            "-Iustd/class/msc"
+        ],
+        "srcDir": ".",
+        "includeDir": ".",
+        "libArchive": false,
+        "libLDFMode": "chain+",
+        "extraScript": "build_usb.py"
+    }
+}
