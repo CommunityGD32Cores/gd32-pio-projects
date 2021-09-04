@@ -14,6 +14,8 @@
 #include "gd32f403.h"
 #elif defined(GD32E10X)
 #include "gd32e10x.h"
+#elif defined(GD32E23x)
+#include "gd32e23x.h"
 #else
 #error "Unknown chip series"
 #endif
@@ -40,7 +42,7 @@ int main(void)
     rcu_periph_clock_enable(LED_CLOCK);
 
     /* set output as output */
-#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x)
     gpio_mode_set(LEDPORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LEDPIN);
     gpio_output_options_set(LEDPORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, LEDPIN);
 #else /* valid for GD32F10x, GD32E20x, GD32F30x, GD32F403, GD32E10X */
