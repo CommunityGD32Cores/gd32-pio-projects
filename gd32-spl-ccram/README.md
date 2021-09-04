@@ -53,3 +53,5 @@ After that, the CCRAM has the initialized and expected values.
 ## Expected output
 
 *TODO*. This has not been run on real hardware yet, it's a best-effort implementation.
+
+By default, the output should appear as UART output, 115200 baud, on TX = PA9. If the macro `USE_ALTERNATE_USART0_PINS` is defined, TX = PB6. This is the same as for the SPL-USART demo.
