@@ -31,11 +31,11 @@ int CCRAM_DATA ccram_initialized_data = 1234;
 uint8_t CCRAM_DATA ccram_buf2[4] = {1, 2, 3, 4};
 ```
 
-The CCRAM **must** be initialized before proper usage. The RAM content on startup will be random, meaning the BSS variables will (which are usually expected to be zero-initialized on startup) and the "initialized" variables in the data section will all be filled with random data.
+The CCRAM **must** be initialized before proper usage. The RAM content on startup will be random, meaning the BSS variables (which are usually expected to be zero-initialized on startup) and the "initialized" variables in the data section will all be filled with random data.
 
 The function `init_ccram_bss_and_data()` initialilzes these two sections accordingly. For initialized variables (e.g., `int CCRAM_DATA ccram_initialized_data = 1234;`), the initialization value (`1234` in this case) is stored in flash and must be copied over to the appropriate place in CCRAM. Further, the BSS section must be zeroed.
 
-By using the variables declare in the linker script wich mark the start and end of these sections in CCRAM and flash, the function can initialize these sections.
+By using special variables declared in the linker script which mark the start and end of these sections in CCRAM and flash, the function can initialize these sections.
 
 ```cpp
 void init_ccram_bss_and_data() {
@@ -48,7 +48,7 @@ void init_ccram_bss_and_data() {
 }
 ```
 
-After that, the CCRAM has the initialized and expected values.
+After calling this function, the CCRAM has the initialized and expected values.
 
 ## Expected output
 
