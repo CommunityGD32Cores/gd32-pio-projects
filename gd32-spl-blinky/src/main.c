@@ -2,6 +2,8 @@
 #include "gd32f10x.h"
 #elif defined(GD32F1x0)
 #include "gd32f1x0.h"
+#elif defined (GD32F20x)
+#include "gd32f20x.h"
 #elif defined(GD32F3x0)
 #include "gd32f3x0.h"
 #elif defined(GD32F30x)
@@ -41,7 +43,7 @@ int main(void)
 #if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx)
     gpio_mode_set(LEDPORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LEDPIN);
     gpio_output_options_set(LEDPORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, LEDPIN);
-#else /* valid for GD32F10x, GD32F30x, GD32F403, GD32E10X */
+#else /* valid for GD32F10x, GD32E20x, GD32F30x, GD32F403, GD32E10X */
     gpio_init(LEDPORT, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LEDPIN);
 #endif
     while (1)

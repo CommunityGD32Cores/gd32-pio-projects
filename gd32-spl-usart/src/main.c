@@ -2,6 +2,8 @@
 #include "gd32f10x.h"
 #elif defined(GD32F1x0)
 #include "gd32f1x0.h"
+#elif defined (GD32F20x)
+#include "gd32f20x.h"
 #elif defined(GD32F3x0)
 #include "gd32f3x0.h"
 #elif defined(GD32F30x)
