@@ -16,6 +16,8 @@
 #include "gd32e10x.h"
 #elif defined(GD32E23x)
 #include "gd32e23x.h"
+#elif defined(GD32E50X)
+#include "gd32e50x.h"
 #else
 #error "Unknown chip series"
 #endif
