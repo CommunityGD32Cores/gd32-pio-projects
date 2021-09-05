@@ -41,7 +41,7 @@ extern uint32_t SystemCoreClock;
 #define configIDLE_SHOULD_YIELD                          1
 #define configUSE_CO_ROUTINES                            0
 
-#define configMAX_PRIORITIES                             ( 10 )
+#define configMAX_PRIORITIES                             ( 56 )
 #define configMAX_CO_ROUTINE_PRIORITIES                  ( 2 )
 #define configTIMER_QUEUE_LENGTH                         3
 #define configTIMER_TASK_PRIORITY                        ( configMAX_PRIORITIES - 1 )
@@ -98,6 +98,7 @@ uint32_t ulGetRunTimeCounterValue( void );
 #define INCLUDE_xSemaphoreGetMutexHolder          1
 #define INCLUDE_xTimerPendFunctionCall            1
 #define INCLUDE_xTaskAbortDelay                   1
+#define INCLUDE_xTaskGetCurrentTaskHandle         1
 
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 

@@ -18,17 +18,26 @@ if cpu in cpu_to_port_map.keys():
 else:
     print("ERROR: FreeRTOS library can't determine which port to use!")
 
+# check if we should include the CMSIS-OS2 compatibility layer
+cpp_defines = env.Flatten(env.get("CPPDEFINES", []))
+include_cmsisos2 = "PIO_FREERTOS_WITH_CMSISOS2" in cpp_defines
+print("Included CMSIS-S2 layer: " + str(include_cmsisos2))
+
 # build one source filter expression
 src_filter_default = [
     "+<*>",
     "-<%s>" %join("portable", "*"), # exclude the entire "portable" folder default
     "+<%s>" % join("portable", port_to_use),
     "-<mpu_wrappers.c>" # we never compile the port with MPU support so we also shouldn't compile that file.
+    "%s<cmsis_os2>" % ("+" if include_cmsisos2 else "-")
 ]
 
 include_parts = [
     join("src", "portable", port_to_use)
 ]
+
+if include_cmsisos2:
+    include_parts += [join("src","cmsis_os2")]
 
 env.Replace(SRC_FILTER=src_filter_default)
 

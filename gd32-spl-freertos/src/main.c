@@ -139,6 +139,12 @@ int main(void)
 extern void xPortSysTickHandler(void);
 void SysTick_Handler(void)
 {
-    xPortSysTickHandler();
+    /* Clear overflow flag */
+    SysTick->CTRL;
+    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+    {
+        /* Call tick handler */
+        xPortSysTickHandler();
+    }
 }
 #endif
