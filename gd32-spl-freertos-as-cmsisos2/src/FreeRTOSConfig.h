@@ -61,6 +61,11 @@ extern uint32_t SystemCoreClock;
 #define configENABLE_FPU 0
 #endif
 
+/* needed for cortex-m23 and cortex-m33 port, otherwise CMIS-OS2 defined handlers clash */
+#if defined(GD32E23x) || defined(GD32E50X)
+#define SysTick_Handler xPortSysTickHandler
+#endif
+
 /* runtime stats generation. can be turned off to save space. */
 #define configGENERATE_RUN_TIME_STATS	1
 #if configGENERATE_RUN_TIME_STATS == 1

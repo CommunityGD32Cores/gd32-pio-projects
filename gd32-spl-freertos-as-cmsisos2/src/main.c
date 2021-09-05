@@ -8,12 +8,13 @@
 #define LEDPIN GPIO_PIN_1
 #define LED_CLOCK RCU_GPIOA
 
-#define STACK_SIZE 256*4
+#define STACK_SIZE (256 * 4)
 uint8_t blinky_thread_stack[STACK_SIZE];
 uint8_t blinky_control_block[100]; //must be >= sizeof(StaticTask_t)
-
-
-osThreadId_t blinky_thread;                /* Thread id of thread: phase_a      */
+osThreadId_t blinky_thread;
+uint8_t print_thread_stack[STACK_SIZE];
+uint8_t print_control_block[100]; //must be >= sizeof(StaticTask_t)
+osThreadId_t print_thread;
 
 void init_led()
 {
@@ -27,12 +28,11 @@ void init_led()
 }
 
 osMutexId_t xPrintfSemaphore;
-//StaticSemaphore_t printfMutexCb; //statically allocated control-block
 const osMutexAttr_t printfMutexAttrib = {
-  "printfMutex",                            // human readable mutex name
-  osMutexRecursive | osMutexPrioInherit,    // attr_bits
-  NULL,//&printfMutexCb,                          // memory for control block   
-  0, //sizeof(printfMutexCb)                          // size for control block
+    "printfMutex",                         // human readable mutex name
+    osMutexRecursive | osMutexPrioInherit, // attr_bits
+    NULL,                                  // memory for control block (will be dynamically allocated)
+    0,                                     // size for control block
 };
 
 void threadsafe_printf_init()
@@ -65,24 +65,47 @@ void vBlinkyTask(void *pvParameters)
     }
 }
 
+void vPrintTask(void *pvParameters)
+{
+    for (;;)
+    {
+        osDelay(2000);
+        threadsafe_printf("Hello from thread \"%s\" (Thread ID %p)!\n",
+                          osThreadGetName(osThreadGetId()), osThreadGetId());
+    }
+}
+
 int main(void)
 {
     init_printf_transport();
     threadsafe_printf_init();
     init_led();
 
-    printf("Starting FreeRTOS + CMSIS-OS2 demo!\n");
+    osVersion_t ver;
+    char verStr[32] = {0};
+    osKernelGetInfo(&ver, verStr, sizeof(verStr));
+    printf("Starting FreeRTOS + CMSIS-OS2 demo! Running on \"%s\"\n", verStr);
 
     /* Initialize CMSIS-RTOS */
     osKernelInitialize();
-    /* create a thread with a pre-allocated stack */
-    const osThreadAttr_t threadAttr = {
-        .cb_mem =  blinky_control_block,
+    /* create threads with a pre-allocated stacks */
+    const osThreadAttr_t blinkyThreadAttr = {
+        .cb_mem = blinky_control_block,
         .cb_size = sizeof(blinky_control_block),
+        .name = "Blinky",
         .stack_mem = blinky_thread_stack,
-        .stack_size = sizeof(blinky_thread_stack),
+        .stack_size = sizeof(blinky_thread_stack)
     };
-    blinky_thread = osThreadNew(vBlinkyTask, NULL, &threadAttr);
+    blinky_thread = osThreadNew(vBlinkyTask, NULL, &blinkyThreadAttr);
+
+    const osThreadAttr_t printThreadAttr = {
+        .cb_mem = print_control_block,
+        .cb_size = sizeof(print_control_block),
+        .name = "Printer",
+        .stack_mem = print_thread_stack,
+        .stack_size = sizeof(print_thread_stack)
+    };
+    print_thread = osThreadNew(vPrintTask, NULL, &printThreadAttr);
 
     /* Start the scheduler itself. */
     if (osKernelGetState() == osKernelReady)
