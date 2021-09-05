@@ -47,3 +47,8 @@ if cpu in ["cortex-m23", "cortex-m33"]:
     env.Append(
         CCFLAGS=["-masm-syntax-unified"]
     )
+if cpu == "cortex-m33":
+    env.Append(
+        CCFLAGS=["-mfpu=fp-armv8", "-mfloat-abi=softfp"],
+        LINKFLAGS=["-mfpu=fp-armv8", "-mfloat-abi=softfp"],
+    )

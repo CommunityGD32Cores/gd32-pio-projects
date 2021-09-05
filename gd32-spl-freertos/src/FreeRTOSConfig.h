@@ -54,7 +54,8 @@ extern uint32_t SystemCoreClock;
 /* don't use trust zone, MPU */
 #define configENABLE_TRUSTZONE 0
 #define configENABLE_MPU 0
-#if defined(GD32F4)
+/* enable FPU for those chips having an FPU.. */
+#if defined(GD32F4xx) || defined(GD32F403) || defined(GD32F3x0) || defined(GD32F30x) || defined(GD32E10X) || defined(GD32E50X)
 #define configENABLE_FPU 1
 #else
 #define configENABLE_FPU 0
