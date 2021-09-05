@@ -1,8 +1,10 @@
-# SPL + FreeRTOS example
+# SPL + FreeRTOS (as CMSIS-OS2) example
 
 ## Description 
 
-Showcases the usage of FreeRTOS in SPL.
+Showcases the usage of FreeRTOS in SPL, with the activated CMSIS-OS2 abstraction layer turned on. This simplifies some of the API usages and follows a CMSIS standard for RTOS functions (`cmsis_os2.h`).
+
+This example builds on the FreeRTOS library found in the [spl-freertos](../gd32-spl-freertos) example.
 
 The FreeRTOS library is implemented in a generic way so that it works for all GD32 ARM chips. It is based on the current FreeRTOS V10.4.4 version.
 
@@ -12,30 +14,22 @@ The FreeRTOS library auto-detects the CPU type from the board manifest and compi
 
 To configure FreeRTOS, a `FreeRTOSConfig.h` file must be in the global include path. This is usually done via the `build_flags` of the project's `platformio.ini`.
 
-In accordance to the selected configuration options, the user may need to implement additional functions needed by FreeRTOS. For example, when static allocation is switched on, FreeRTOS requires that the function `vApplicationGetIdleTaskMemory()` be implemented to return the static memory for the idle task, et cetera. This project implements these functions in `src/freertos_callbacks.c`.
+In accordance to the selected configuration options, the user may need to implement additional functions needed by FreeRTOS. However, most of these functions are already implemented by the CMSIS-OS2 layer. In this case, we only need to implement `vAssertCalled()` and some runtime timer functions because the `FreeRTOSConfig.h` references this. This project implements these functions in `src/freertos_callbacks.c`. 
 
 ## Expected output
 
-The firmware uses one task to blink the LED defined at the top of `src/main.c`, and another task to print runtime statistics about running tasks.
+The firmware uses one task to blink the LED defined at the top of `src/main.c`, and another task to print its own thread name and ID.
 
 The output is configured in the same way as in the [spl-usart](../gd32-spl-usart) example.
 
 ```
-Starting FreeRTOS demo!
+Starting FreeRTOS + CMSIS-OS2 demo! Running on "FreeRTOS V10.4.4"
 Blinky!
-Total runtime: 26370 ticks
-Task: "IDLE", Prio: 0, Runtime: 26358, CPU Usage: 100%
-Task: "TaskManag", Prio: 0, Runtime: 0, CPU Usage:<1% 
-Task: "Blinky", Prio: 0, Runtime: 9, CPU Usage:<1%    
-Task: "Tmr Svc", Prio: 9, Runtime: 0, CPU Usage:<1%   
+Hello from thread "Printer" (Thread ID 0x20001238)!
 Blinky!
 Blinky!
-Total runtime: 53001 ticks
-Task: "TaskManag", Prio: 0, Runtime: 276, CPU Usage:<1%
-Task: "IDLE", Prio: 0, Runtime: 52695, CPU Usage: 99%  
-Task: "Blinky", Prio: 0, Runtime: 27, CPU Usage:<1%
-Task: "Tmr Svc", Prio: 9, Runtime: 0, CPU Usage:<1%
-Blinky!
+Hello from tBlinky!
+hread "Printer" (Thread ID 0x20001238)!
 Blinky!
 ...
 ```
