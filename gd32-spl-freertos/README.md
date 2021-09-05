@@ -4,7 +4,7 @@
 
 Showcases the usage of FreeRTOS in SPL.
 
-The FreeRTOS library is implemented in a generic way so that it works for all GD32 ARM chips.
+The FreeRTOS library is implemented in a generic way so that it works for all GD32 ARM chips. It is based on the current FreeRTOS V10.4.4 version.
 
 ## Technicalities
 
