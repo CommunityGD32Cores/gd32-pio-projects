@@ -24,15 +24,15 @@ The output is configured in the same way as in the [spl-usart](../gd32-spl-usart
 Starting FreeRTOS demo!
 Blinky!
 Total runtime: 26370 ticks
-Task: "IDLE", Prio: 0, Runtime: 26358, CPU Usage:<1%
-Task: "TaskManag", Prio: 0, Runtime: 0, CPU Usage:<1%
-Task: "Blinky", Prio: 0, Runtime: 9, CPU Usage:<1%
-Task: "Tmr Svc", Prio: 9, Runtime: 0, CPU Usage:<1%
+Task: "IDLE", Prio: 0, Runtime: 26358, CPU Usage: 100%
+Task: "TaskManag", Prio: 0, Runtime: 0, CPU Usage:<1% 
+Task: "Blinky", Prio: 0, Runtime: 9, CPU Usage:<1%    
+Task: "Tmr Svc", Prio: 9, Runtime: 0, CPU Usage:<1%   
 Blinky!
 Blinky!
 Total runtime: 53001 ticks
-Task: "TaskManag", Prio: 0, Runtime: 274, CPU Usage:<1%
-Task: "IDLE", Prio: 0, Runtime: 52697, CPU Usage:<1%
+Task: "TaskManag", Prio: 0, Runtime: 276, CPU Usage:<1%
+Task: "IDLE", Prio: 0, Runtime: 52695, CPU Usage: 99%  
 Task: "Blinky", Prio: 0, Runtime: 27, CPU Usage:<1%
 Task: "Tmr Svc", Prio: 9, Runtime: 0, CPU Usage:<1%
 Blinky!

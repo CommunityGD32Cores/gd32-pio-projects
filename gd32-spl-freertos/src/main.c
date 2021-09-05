@@ -75,6 +75,7 @@ void vTaskManagerTask(void *pvParameters)
                                            uxArraySize,
                                            &ulTotalRunTime);
         printf("Total runtime: %lu ticks\n", ulTotalRunTime);
+        ulTotalRunTime /= 100UL;
         for (UBaseType_t x = 0; x < uxArraySize; x++)
         {
             ulStatsAsPercentage =
