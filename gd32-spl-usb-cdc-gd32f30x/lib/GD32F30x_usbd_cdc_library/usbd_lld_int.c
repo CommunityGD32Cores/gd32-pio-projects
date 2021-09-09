@@ -100,6 +100,7 @@ void usbd_int_hpst (usb_dev *udev)
     \param[out] none
     \retval     none
 */
+#include <stdio.h>
 void usbd_isr (void)
 {
     __IO uint16_t int_status = (uint16_t)USBD_INTF;
@@ -107,11 +108,14 @@ void usbd_isr (void)
 
     usb_dev *udev = usbd_core.dev;
 
+    printf("ISR %d\n", int_flag);
+
     if (INTF_STIF & int_flag) {
         /* wait till interrupts are not pending */
         while ((int_status = (uint16_t)USBD_INTF) & (uint16_t)INTF_STIF) {
             /* get endpoint number */
             uint8_t ep_num = (uint8_t)(int_status & INTF_EPNUM);
+            printf("ISR2 %d\n", int_flag);
 
             if (int_status & INTF_DIR) {
                 /* handle the USB OUT direction transaction */

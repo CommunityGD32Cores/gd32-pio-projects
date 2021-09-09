@@ -35,6 +35,8 @@ OF SUCH DAMAGE.
 #include "cdc_acm_core.h"
 #include "usbd_hw.h"
 #include "systick.h"
+#include "printf_over_x.h"
+#include <stdio.h>
 
 usb_dev usbd_cdc;
 
@@ -48,6 +50,10 @@ int main(void)
 {
     /* system clocks configuration */
     rcu_config();
+
+    init_printf_transport();
+
+    printf("Start of USB-CDC Demo!\n");
 
     /* systick config */
     systick_config();
@@ -64,9 +70,11 @@ int main(void)
     /* enabled USB pull-up */
     usbd_connect(&usbd_cdc);
 
+    printf("Now waiting for USB device to be connected...\n");
     while (USBD_CONFIGURED != usbd_cdc.cur_status) {
         /* wait for standard USB enumeration is finished */
     }
+    printf("Yay, connected!\n");
 
     while (1) {
         if (0U == cdc_acm_check_ready(&usbd_cdc)) {
