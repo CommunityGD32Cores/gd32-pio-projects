@@ -74,6 +74,12 @@ void init_printf_transport() {
 #else /* valid for GD32F10x, GD32F30x */
     gpio_init(UART_TX_RX_GPIO, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, UART_TX_GPIO_PIN);
     gpio_init(UART_TX_RX_GPIO, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, UART_RX_GPIO_PIN);
+
+    #ifdef USE_ALTERNATE_USART0_PINS
+        //activate remap
+        gpio_pin_remap_config(GPIO_USART0_REMAP, ENABLE);
+    #endif
+
 #endif
 
     /* USART configure 115200 8N1 */
