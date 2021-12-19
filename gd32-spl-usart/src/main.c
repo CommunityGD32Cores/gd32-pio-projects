@@ -20,6 +20,8 @@
 #include "gd32e50x.h"
 #elif defined(GD32L23x)
 #include "gd32l23x.h"
+#elif defined(GD32W51x)
+#include "gd32w51x.h"
 #else
 #error "Unknown chip series"
 #endif
@@ -35,7 +37,7 @@
 #define UART_RX_GPIO_PIN    GPIO_PIN_10
 
 /* only for certain series: set pin to alternate function x for UART */
-#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x) || defined(GD32W51x)
 #define UART_TX_AF  GPIO_AF_1
 #define UART_RX_AF  GPIO_AF_1
 #endif
@@ -49,7 +51,7 @@
 #define UART_RX_GPIO_PIN    GPIO_PIN_7
 
 /* only for certain series: set pin to alternate function x for UART */
-#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x) || defined(GD32W51x)
 #define UART_TX_AF  GPIO_AF_0 /* PB6 AF0 is USART0_TX */
 #define UART_RX_AF  GPIO_AF_0 /* PB7 AF0 is USART0_RX */
 #endif
@@ -70,14 +72,14 @@ int main(void)
     rcu_periph_clock_enable(RCU_UART);
 
     /* connect port to USARTx_Tx and USARTx_Rx  */
-#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x) || defined(GD32W51x)
     gpio_af_set(UART_TX_RX_GPIO, UART_TX_AF, UART_TX_GPIO_PIN);
     gpio_af_set(UART_TX_RX_GPIO, UART_RX_AF, UART_RX_GPIO_PIN);
 
     gpio_mode_set(UART_TX_RX_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_TX_GPIO_PIN);
-    gpio_output_options_set(UART_TX_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, UART_TX_GPIO_PIN);
+    gpio_output_options_set(UART_TX_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, UART_TX_GPIO_PIN);
     gpio_mode_set(UART_TX_RX_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_RX_GPIO_PIN);
-    gpio_output_options_set(UART_TX_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, UART_RX_GPIO_PIN);
+    gpio_output_options_set(UART_TX_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, UART_RX_GPIO_PIN);
 #else /* valid for GD32F10x, GD32F30x */
     gpio_init(UART_TX_RX_GPIO, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, UART_TX_GPIO_PIN);
     gpio_init(UART_TX_RX_GPIO, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, UART_RX_GPIO_PIN);
