@@ -10,6 +10,8 @@ It performs the computation of `cos(a)`, `sin(a)`, `cos²(a)`, `sin²(a)` and `c
 
 The libary declares the usage of the CMSIS-DSP library by `#include "arm_math.h"`. This triggers PlatformIO to try and find the library that supplies this header, and will find it in the precompiled [CMSIS-DSP library](https://github.com/CommunityGD32Cores/gd32-pio-spl-package/tree/main/gd32/cmsis/libraries/cmsis_dsp)).
 
+Further, the `platformio.ini`, for Cortex-M33 targets, makes the compilation use `-mfloat-abi=hard` by activating `board_build.cm33_hardfloat = yes`. This is required for the prebuilt CMSIS-DSP library for Cortex-M33, other targets use the default soft-float ABI.
+
 Further, to be able to use `printf()` with the `%f` floating point specifier, the project declares `board_build.spl_printf_float = yes`, which instructs the SPL builder script to trigger the necessary compiler flags to activate this feature.
 
 The output is transported in a configurable manner to the developer, defined via `printf_over_x.c` and the activated macros. In the standard case, the UART is used, with two possible pin maps. This technique is exactly the same as in [gd32-spl-usart](../gd32-spl-usart). 
