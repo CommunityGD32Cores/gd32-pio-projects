@@ -88,6 +88,7 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
+  delay(500); //small delay to see text
   Serial.println(F("Dhrystone Benchmark, Version 2.1 (Language: C)"));
   Serial.flush();
 
