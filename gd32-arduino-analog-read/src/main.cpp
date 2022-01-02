@@ -13,12 +13,23 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define xstr(s) str(s)
 #define str(s) #s
 
-#ifdef PA7
+#define ANALOG_PIN_SELECT_PA7 0
+#define ANALOG_PIN_SELECT_A0  1
+#define ANALOG_PIN_SELECT_A1  2
+/* default */
+#ifndef ANALOG_PIN_SELECT
+#define ANALOG_PIN_SELECT ANALOG_PIN_SELECT_A1
+#endif
+
+#if defined(PA7) && ANALOG_PIN_SELECT == ANALOG_PIN_SELECT_PA7
 #define ANALOG_IN_PIN PA7
 #define ANALOG_IN_PIN_STR "PA7"
-#else 
+#elif ANALOG_PIN_SELECT == ANALOG_PIN_SELECT_A0
 #define ANALOG_IN_PIN A0
-#define ANALOG_IN_PIN_STR "Analog pin 0"
+#define ANALOG_IN_PIN_STR "A0"
+#else
+#define ANALOG_IN_PIN A1
+#define ANALOG_IN_PIN_STR "A1"
 #endif
 
 #define NUM_SAMPLES  50
