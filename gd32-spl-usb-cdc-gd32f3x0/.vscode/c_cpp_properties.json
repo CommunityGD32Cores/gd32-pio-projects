@@ -1,0 +1,94 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "C:/Users/Max/Desktop/gd32_dev/gd32-pio-projects/gd32-spl-usb-cdc-gd32f3x0/include",
+                "C:/Users/Max/Desktop/gd32_dev/gd32-pio-projects/gd32-spl-usb-cdc-gd32f3x0/src",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f350g_start",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/driver/Include",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/host/core/Include",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/common",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/class/cdc",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/class/hid",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/class/msc",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/cmsis/cores/gd32",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/cmsis/startup_files",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/cmsis/variants/gd32f3x0",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/variants/gd32f3x0/inc",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/variants/gd32f3x0/src",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/device/class/cdc/Include",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/device/core/Include",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/fat_fs/include",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/fat_fs/src",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/LCD_Common",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f330c_start",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f330f_start",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f330g_start",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f350c_start",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f350r_eval",
+                "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f3x0_lcd_eval",
+                "C:/Users/Max/.platformio/packages/tool-unity",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "C:/Users/Max/Desktop/gd32_dev/gd32-pio-projects/gd32-spl-usb-cdc-gd32f3x0/include",
+                    "C:/Users/Max/Desktop/gd32_dev/gd32-pio-projects/gd32-spl-usb-cdc-gd32f3x0/src",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f350g_start",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/driver/Include",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/host/core/Include",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/common",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/class/cdc",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/class/hid",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/ustd/class/msc",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/cmsis/cores/gd32",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/cmsis/startup_files",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/cmsis/variants/gd32f3x0",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/variants/gd32f3x0/inc",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/variants/gd32f3x0/src",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/device/class/cdc/Include",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/GD32F3x0_usbfs_library/device/core/Include",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/fat_fs/include",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/fat_fs/src",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/LCD_Common",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f330c_start",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f330f_start",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f330g_start",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f350c_start",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f350r_eval",
+                    "C:/Users/Max/.platformio/packages/framework-spl-gd32/gd32/spl/libraries/gd32f3x0/gd32f3x0_lcd_eval",
+                    "C:/Users/Max/.platformio/packages/tool-unity",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=50203",
+                "GD32F3x0",
+                "GD32F350",
+                "PIO_USBFS_DEVICE_CDC",
+                "F_CPU=108000000L",
+                "BOARD_NAME=\"GD32350G_START\"",
+                "GD32350G_START",
+                "USE_STDPERIPH_DRIVER",
+                "USE_USB_FS",
+                ""
+            ],
+            "compilerPath": "C:/Users/Max/.platformio/packages/toolchain-gccarmnoneeabi@1.90201.191206/bin/arm-none-eabi-gcc.exe",
+            "compilerArgs": [
+                "-mthumb",
+                "-mcpu=cortex-m4",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}

@@ -1,7 +1,7 @@
 #include <gd32_include.h>
 #include <stdio.h>
 
-#ifndef USE_ALTERNATE_USART0_PINS
+#if !defined(USE_ALTERNATE_USART0_PINS) && !defined(GD32350G_START)
 /* settings for used USART (UASRT0) and pins, TX = PA9, RX = PA10 */
 #define RCU_GPIO            RCU_GPIOA
 #define RCU_UART            RCU_USART0
