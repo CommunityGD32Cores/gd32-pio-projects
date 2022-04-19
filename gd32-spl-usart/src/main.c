@@ -37,9 +37,13 @@
 #define UART_RX_GPIO_PIN    GPIO_PIN_10
 
 /* only for certain series: set pin to alternate function x for UART */
-#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x) || defined(GD32W51x)
+#if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x)
 #define UART_TX_AF  GPIO_AF_1
 #define UART_RX_AF  GPIO_AF_1
+#elif defined(GD32L23x) || defined(GD32W51x)
+// AF7 has PA9 + PA10 USART0 TX+RX function.
+#define UART_TX_AF  GPIO_AF_7
+#define UART_RX_AF  GPIO_AF_7
 #endif
 #else
 /* settings for USART0 alternate settings, TX = PB6, RX = PB7 */
