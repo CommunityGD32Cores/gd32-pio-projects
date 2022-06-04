@@ -1,0 +1,36 @@
+// AUTOMATICALLY GENERATED FILE. PLEASE DO NOT MODIFY IT MANUALLY
+//
+// PIO Unified Debugger
+//
+// Documentation: https://docs.platformio.org/page/plus/debugging.html
+// Configuration: https://docs.platformio.org/page/projectconf/section_env_debug.html
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug",
+            "executable": "C:/Users/Max/Desktop/gd32_dev/gd32-pio-projects/gd32-spl-usb-host-hid-custom-lib-gd323x0/.pio/build/gd32350g_start/firmware.elf",
+            "projectEnvName": "gd32350g_start",
+            "toolchainBinDir": "C:/Users/Max/.platformio/packages/toolchain-gccarmnoneeabi@1.90201.191206/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "C:/Users/Max/.platformio/platforms/gd32/misc/svd/GD32F3x0.svd",
+            "preLaunchTask": {
+                "type": "PlatformIO",
+                "task": "Pre-Debug (gd32350g_start)"
+            }
+        },
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug (skip Pre-Debug)",
+            "executable": "C:/Users/Max/Desktop/gd32_dev/gd32-pio-projects/gd32-spl-usb-host-hid-custom-lib-gd323x0/.pio/build/gd32350g_start/firmware.elf",
+            "projectEnvName": "gd32350g_start",
+            "toolchainBinDir": "C:/Users/Max/.platformio/packages/toolchain-gccarmnoneeabi@1.90201.191206/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "svdPath": "C:/Users/Max/.platformio/platforms/gd32/misc/svd/GD32F3x0.svd"
+        }
+    ]
+}
