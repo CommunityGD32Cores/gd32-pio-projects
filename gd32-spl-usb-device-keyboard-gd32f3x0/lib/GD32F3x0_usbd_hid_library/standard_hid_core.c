@@ -3,32 +3,33 @@
     \brief   HID class driver
 
     \version 2020-08-13, V3.0.0, firmware for GD32F3x0
+    \version 2020-12-07, V3.0.1, firmware for GD32F3x0
 */
 
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,13 +41,12 @@ OF SUCH DAMAGE.
 
 /* Note:it should use the C99 standard when compiling the below codes */
 /* USB standard device descriptor */
-const usb_desc_dev hid_dev_desc =
-{
-    .header = 
-     {
-         .bLength          = USB_DEV_DESC_LEN, 
-         .bDescriptorType  = USB_DESCTYPE_DEV
-     },
+const usb_desc_dev hid_dev_desc = {
+    .header =
+    {
+        .bLength          = USB_DEV_DESC_LEN,
+        .bDescriptorType  = USB_DESCTYPE_DEV
+    },
     .bcdUSB                = 0x0200U,
     .bDeviceClass          = 0x00U,
     .bDeviceSubClass       = 0x00U,
@@ -61,15 +61,14 @@ const usb_desc_dev hid_dev_desc =
     .bNumberConfigurations = USBD_CFG_MAX_NUM
 };
 
-const usb_hid_desc_config_set hid_config_desc = 
-{
-    .config = 
+const usb_hid_desc_config_set hid_config_desc = {
+    .config =
     {
-        .header = 
-         {
-             .bLength         = sizeof(usb_desc_config), 
-             .bDescriptorType = USB_DESCTYPE_CONFIG 
-         },
+        .header =
+        {
+            .bLength         = sizeof(usb_desc_config),
+            .bDescriptorType = USB_DESCTYPE_CONFIG
+        },
         .wTotalLength         = USB_HID_CONFIG_DESC_LEN,
         .bNumInterfaces       = 0x01U,
         .bConfigurationValue  = 0x01U,
@@ -78,13 +77,13 @@ const usb_hid_desc_config_set hid_config_desc =
         .bMaxPower            = 0x32U
     },
 
-    .hid_itf = 
+    .hid_itf =
     {
-        .header = 
-         {
-             .bLength         = sizeof(usb_desc_itf), 
-             .bDescriptorType = USB_DESCTYPE_ITF
-         },
+        .header =
+        {
+            .bLength         = sizeof(usb_desc_itf),
+            .bDescriptorType = USB_DESCTYPE_ITF
+        },
         .bInterfaceNumber     = 0x00U,
         .bAlternateSetting    = 0x00U,
         .bNumEndpoints        = 0x01U,
@@ -94,13 +93,13 @@ const usb_hid_desc_config_set hid_config_desc =
         .iInterface           = 0x00U
     },
 
-    .hid_vendor = 
+    .hid_vendor =
     {
-        .header = 
-         {
-             .bLength         = sizeof(usb_desc_hid), 
-             .bDescriptorType = USB_DESCTYPE_HID 
-         },
+        .header =
+        {
+            .bLength         = sizeof(usb_desc_hid),
+            .bDescriptorType = USB_DESCTYPE_HID
+        },
         .bcdHID               = 0x0111U,
         .bCountryCode         = 0x00U,
         .bNumDescriptors      = 0x01U,
@@ -108,13 +107,13 @@ const usb_hid_desc_config_set hid_config_desc =
         .wDescriptorLength    = USB_HID_REPORT_DESC_LEN,
     },
 
-    .hid_epin = 
+    .hid_epin =
     {
-        .header = 
-         {
-             .bLength         = sizeof(usb_desc_ep), 
-             .bDescriptorType = USB_DESCTYPE_EP
-         },
+        .header =
+        {
+            .bLength         = sizeof(usb_desc_ep),
+            .bDescriptorType = USB_DESCTYPE_EP
+        },
         .bEndpointAddress     = HID_IN_EP,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_IN_PACKET,
@@ -123,64 +122,58 @@ const usb_hid_desc_config_set hid_config_desc =
 };
 
 /* USB language ID Descriptor */
-const usb_desc_LANGID usbd_language_id_desc = 
-{
-    .header = 
-     {
-         .bLength         = sizeof(usb_desc_LANGID), 
-         .bDescriptorType = USB_DESCTYPE_STR
-     },
+const usb_desc_LANGID usbd_language_id_desc = {
+    .header =
+    {
+        .bLength         = sizeof(usb_desc_LANGID),
+        .bDescriptorType = USB_DESCTYPE_STR
+    },
     .wLANGID              = ENG_LANGID
 };
 
 /* USB manufacture string */
-static const usb_desc_str manufacturer_string = 
-{
-    .header = 
-     {
-         .bLength         = USB_STRING_LEN(10U), 
-         .bDescriptorType = USB_DESCTYPE_STR,
-     },
+static const usb_desc_str manufacturer_string = {
+    .header =
+    {
+        .bLength         = USB_STRING_LEN(10U),
+        .bDescriptorType = USB_DESCTYPE_STR,
+    },
     .unicode_string = {'G', 'i', 'g', 'a', 'D', 'e', 'v', 'i', 'c', 'e'}
 };
 
 /* USB product string */
-static const usb_desc_str product_string = 
-{
-    .header = 
-     {
-         .bLength         = USB_STRING_LEN(17U), 
-         .bDescriptorType = USB_DESCTYPE_STR,
-     },
-    .unicode_string = {'G', 'D', '3', '2', '-','U', 'S', 'B', '_', 'K', 'e', 'y', 'b', 'o', 'a', 'r', 'd'}
+static const usb_desc_str product_string = {
+    .header =
+    {
+        .bLength         = USB_STRING_LEN(17U),
+        .bDescriptorType = USB_DESCTYPE_STR,
+    },
+    .unicode_string = {'G', 'D', '3', '2', '-', 'U', 'S', 'B', '_', 'K', 'e', 'y', 'b', 'o', 'a', 'r', 'd'}
 };
 
 /* USBD serial string */
-static usb_desc_str serial_string = 
-{
-    .header = 
-     {
-         .bLength         = USB_STRING_LEN(12U), 
-         .bDescriptorType = USB_DESCTYPE_STR,
-     }
+static usb_desc_str serial_string = {
+    .header =
+    {
+        .bLength         = USB_STRING_LEN(12U),
+        .bDescriptorType = USB_DESCTYPE_STR,
+    }
 };
 
-void *const usbd_hid_strings[] = 
-{
-    [STR_IDX_LANGID]  = (uint8_t *)&usbd_language_id_desc,
-    [STR_IDX_MFC]     = (uint8_t *)&manufacturer_string,
-    [STR_IDX_PRODUCT] = (uint8_t *)&product_string,
-    [STR_IDX_SERIAL]  = (uint8_t *)&serial_string
+void *const usbd_hid_strings[] = {
+    [STR_IDX_LANGID]  = (uint8_t *) &usbd_language_id_desc,
+    [STR_IDX_MFC]     = (uint8_t *) &manufacturer_string,
+    [STR_IDX_PRODUCT] = (uint8_t *) &product_string,
+    [STR_IDX_SERIAL]  = (uint8_t *) &serial_string
 };
 
 usb_desc hid_desc = {
-    .dev_desc    = (uint8_t *)&hid_dev_desc,
-    .config_desc = (uint8_t *)&hid_config_desc,
+    .dev_desc    = (uint8_t *) &hid_dev_desc,
+    .config_desc = (uint8_t *) &hid_config_desc,
     .strings     = usbd_hid_strings
 };
 
-const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] =
-{
+const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] = {
     0x05, 0x01,  /* USAGE_PAGE (Generic Desktop) */
     0x09, 0x06,  /* USAGE (Keyboard) */
     0xa1, 0x01,  /* COLLECTION (Application) */
@@ -200,7 +193,9 @@ const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] =
 
     0x95, 0x06,  /* REPORT_COUNT (6) */
     0x75, 0x08,  /* REPORT_SIZE (8) */
-    0x25, 0xFF,  /* LOGICAL_MAXIMUM (255) */
+    0x15, 0x00,  /* LOGICAL_MINIMUM (0) */
+    0x26, 0xFF, 0x00,  /* LOGICAL_MAXIMUM (255) */
+    0x05, 0x07,  /* USAGE_PAGE (Keyboard/Keypad) */
     0x19, 0x00,  /* USAGE_MINIMUM (Reserved (no event indicated)) */
     0x29, 0x65,  /* USAGE_MAXIMUM (Keyboard Application) */
     0x81, 0x00,  /* INPUT (Data,Ary,Abs) */
@@ -209,10 +204,10 @@ const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] =
 };
 
 /* local function prototypes ('static') */
-static uint8_t hid_init    (usb_dev *udev, uint8_t config_index);
-static uint8_t hid_deinit  (usb_dev *udev, uint8_t config_index);
-static uint8_t hid_req     (usb_dev *udev, usb_req *req);
-static uint8_t hid_data_in (usb_dev *udev, uint8_t ep_num);
+static uint8_t hid_init(usb_dev *udev, uint8_t config_index);
+static uint8_t hid_deinit(usb_dev *udev, uint8_t config_index);
+static uint8_t hid_req(usb_dev *udev, usb_req *req);
+static uint8_t hid_data_in(usb_dev *udev, uint8_t ep_num);
 
 usb_class_core usbd_hid_cb = {
     .command         = NO_CMD,
@@ -231,9 +226,9 @@ usb_class_core usbd_hid_cb = {
     \param[out] none
     \retval     USB device operation status
 */
-uint8_t hid_itfop_register (usb_dev *udev, hid_fop_handler *hid_fop)
+uint8_t hid_itfop_register(usb_dev *udev, hid_fop_handler *hid_fop)
 {
-    if (NULL != hid_fop) {
+    if(NULL != hid_fop) {
         udev->dev.user_data = (void *)hid_fop;
 
         return USBD_OK;
@@ -250,7 +245,7 @@ uint8_t hid_itfop_register (usb_dev *udev, hid_fop_handler *hid_fop)
     \param[out] none
     \retval     USB device operation status
 */
-uint8_t hid_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
+uint8_t hid_report_send(usb_dev *udev, uint8_t *report, uint32_t len)
 {
     standard_hid_handler *hid = (standard_hid_handler *)udev->dev.class_data[USBD_HID_INTERFACE];
 
@@ -268,20 +263,20 @@ uint8_t hid_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t hid_init (usb_dev *udev, uint8_t config_index)
+static uint8_t hid_init(usb_dev *udev, uint8_t config_index)
 {
     static standard_hid_handler hid_handler;
 
     memset((void *)&hid_handler, 0U, sizeof(standard_hid_handler));
 
     /* Initialize the data Tx endpoint */
-    usbd_ep_setup (udev, &(hid_config_desc.hid_epin));
+    usbd_ep_setup(udev, &(hid_config_desc.hid_epin));
 
     hid_handler.prev_transfer_complete = 1U;
 
     udev->dev.class_data[USBD_HID_INTERFACE] = (void *)&hid_handler;
 
-    if (NULL != udev->dev.user_data) {
+    if(NULL != udev->dev.user_data) {
         ((hid_fop_handler *)udev->dev.user_data)->hid_itf_config();
     }
 
@@ -295,7 +290,7 @@ static uint8_t hid_init (usb_dev *udev, uint8_t config_index)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t hid_deinit (usb_dev *udev, uint8_t config_index)
+static uint8_t hid_deinit(usb_dev *udev, uint8_t config_index)
 {
     /* deinitialize HID endpoints */
     usbd_ep_clear(udev, HID_IN_EP);
@@ -310,13 +305,13 @@ static uint8_t hid_deinit (usb_dev *udev, uint8_t config_index)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t hid_req (usb_dev *udev, usb_req *req)
+static uint8_t hid_req(usb_dev *udev, usb_req *req)
 {
     usb_transc *transc = &udev->dev.transc_in[0];
 
     standard_hid_handler *hid = (standard_hid_handler *)udev->dev.class_data[USBD_HID_INTERFACE];
 
-    switch (req->bRequest) {
+    switch(req->bRequest) {
     case GET_REPORT:
         /* no use for this driver */
         break;
@@ -346,11 +341,14 @@ static uint8_t hid_req (usb_dev *udev, usb_req *req)
         break;
 
     case USB_GET_DESCRIPTOR:
-        if (USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
+        if(USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
             transc->remain_len = USB_MIN(USB_HID_REPORT_DESC_LEN, req->wLength);
             transc->xfer_buf = (uint8_t *)hid_report_desc;
 
             return REQ_SUPP;
+        } else if(USB_DESCTYPE_HID == (req->wValue >> 8U)) {
+            transc->remain_len = USB_MIN(9U, req->wLength);
+            transc->xfer_buf = (uint8_t *)(&(hid_config_desc.hid_vendor));
         }
         break;
 
@@ -368,11 +366,11 @@ static uint8_t hid_req (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t hid_data_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t hid_data_in(usb_dev *udev, uint8_t ep_num)
 {
     standard_hid_handler *hid = (standard_hid_handler *)udev->dev.class_data[USBD_HID_INTERFACE];
 
-    if (0U != hid->data[2]) {
+    if(0U != hid->data[2]) {
         hid->data[2] = 0x00U;
 
         usbd_ep_send(udev, HID_IN_EP, hid->data, HID_IN_PACKET);
