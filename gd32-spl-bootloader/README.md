@@ -31,7 +31,9 @@ Duplicate the `genericGD32F103C8_bootloader` and `genericGD32F103C8_application`
 
 The output is configured in the same way as in the [spl-usart](../gd32-spl-usart) example. Make sure to connect the USB-UART adapter to the configured pins: With no `USE_ALTERNATE_USART0_PINS`: TX=PA9, otherwise PB6.
 
-After uploading, you should press the reset button to start from the beginning again.
+You must upload **both** the `_bootloader` and the `_application` firmware for this to work correctly using the [project tasks](https://docs.platformio.org/en/latest/integration/ide/vscode.html#project-tasks) for these environments.
+
+After uploading bootloader and application and using the "Monitor" project task, you should press the reset button to start from the beginning again.
 
 First, the bootlaoder will start and load the stack pointer and entry point address from the expected addresses in flash (0x8004000 and 0x8004004). 
 It will print those, then jump to the application's entry point. 
