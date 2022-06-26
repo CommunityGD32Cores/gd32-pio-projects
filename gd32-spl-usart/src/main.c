@@ -26,6 +26,7 @@
 #error "Unknown chip series"
 #endif
 #include <stdio.h>
+#include <string.h>
 
 #ifndef USE_ALTERNATE_USART0_PINS
 /* settings for used USART (UASRT0) and pins, TX = PA9, RX = PA10 */
@@ -60,6 +61,10 @@
 #define UART_RX_AF  GPIO_AF_0 /* PB7 AF0 is USART0_RX */
 #endif
 #endif 
+
+/* enable this macro if you also want to test the receive path */
+/* on by default, comment this line if you want to transmit only*/
+#define ACTIVATE_RX_DEMO
 
 void systick_config(void);
 void delay_1ms(uint32_t count);
@@ -100,19 +105,47 @@ int main(void)
     usart_enable(USART);
 
     /* short delay to make sure that the serial monitor was started before we print something */
-    delay_1ms(500);
+    delay_1ms(1000);
 
     int i = 0;
     while (1)
     {
-        printf("a usart transmit test example! iteration %d\n", i++);
+        printf("A usart transmit + receive example! iteration %d\n", i++);
+#ifdef ACTIVATE_RX_DEMO
+        printf("Please input something: ");
+        fflush(stdout);
+        char input[64];
+        memset(input, 0, sizeof(input));
+        fgets(input, sizeof(input), stdin);        
+        //newlines (\r\n) at the end are preserved, but if we don't
+        // want that we can remove them and normalize to e.g. \n lineending.
+        input[strcspn(input, "\r\n")] = '\0'; 
+        printf("\nReceived %d bytes: %s\n", (int) strlen(input), input);
+#else
         delay_1ms(500);
+#endif
     }
 }
 
 /* retarget the gcc's C library printf function to the USART */
 #include <errno.h>
 #include <sys/unistd.h> // STDOUT_FILENO, STDERR_FILENO
+
+int _read(int file, char *data, int len) {
+    // wait until we get a receive interrupt
+    while(RESET == usart_flag_get(USART, USART_FLAG_RBNE))
+        ;
+    // receive data
+    int i = 0;
+    data[i++] = (uint8_t) usart_data_receive(USART);
+    // return 1 byte. this really isn't the smartest thing to do
+    // (we could wait for more bytes sent after this), 
+    // but the upper stdio layer will just again call into
+    // this function to read the next byte.
+    // we might miss a few bytes though.
+    return i;
+}
+
 int _write(int file, char *data, int len)
 {
     if ((file != STDOUT_FILENO) && (file != STDERR_FILENO))

@@ -4,6 +4,8 @@
 
 This example project shows how to implement the necessary functions so that `printf()` output is directed to the USART peripheral and thus observable on the serial monitor.
 
+Also capable of reading UART input via `scanf()` or `fgets()`.
+
 ## Technicalities
 
 To make this work, the firmware needs to implement a low-level C library function responsible for writing data to a target file descriptor, `int _write(int fd, char* data, int len)`. The file descriptor number will be 1 for the standard-out (`stdout`, `STDOUT_FILENO`), 2 for `stderr` and 0 for `stdin`. The implementation of `_write` is then responsible for transporting the data in whatever way it needs to. Obviously, we choose to write the data out via USART here.
@@ -33,6 +35,12 @@ int _write(int file, char *data, int len)
 
 **Note** that existing original SPL examples by GigaDevice do not do this, they implement `fputc()` instead, and must be adapted in the above way to work with GCC.
 
+This demo also tries to read UART input if the macro
+```cpp
+#define ACTIVATE_RX_DEMO
+```
+is actiavted in `src/main.c`. A simple `_read()` implementation enables the stdio library to read input via UART and echo it back.
+
 ## UART settings
 
 This example code initializes the USART0 peripheral to send at 115200 baud and the standard 8 databits, no parity, 1 stopbit ("8N1") configuration. 
@@ -49,6 +57,8 @@ Note that PlatformIO's serial monitor can be extensively configured per [documen
 * `monitor_port = ...`: If PlatformIO automatic serial port detection logic fails you, you can specify the serial port device (e.g., `COM9`, `/dev/ttyUSB0`) here. Usually this is not necessary.
 
 ## Observing the output
+
+The following output is expected when the `ACTIVATE_RX_DEMO` is turned **off**.
 
 To observe the outout, follow the `README` of this repo to build and upload the application. To then start the serial monitor in VSCode, use the [project task](https://docs.platformio.org/en/latest/integration/ide/vscode.html#project-tasks) "Monitor".
 
