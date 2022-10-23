@@ -12,10 +12,6 @@
 #define LEDPIN      GPIO_PIN_11
 #define LED_CLOCK   RCU_GPIOB
 
-#define LEDPORT     GPIOB
-#define LEDPIN      GPIO_PIN_11
-#define LED_CLOCK   RCU_GPIOB
-
 void led_task(void *p_arg) {
     sys_reset_flag_check();
     sys_os_misc_init();
