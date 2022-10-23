@@ -34,6 +34,10 @@
 #define LEDPORT     GPIOA
 #define LEDPIN      GPIO_PIN_1
 #define LED_CLOCK   RCU_GPIOA
+#elif defined(GD32W515T_START)
+#define LEDPORT     GPIOB
+#define LEDPIN      GPIO_PIN_11
+#define LED_CLOCK   RCU_GPIOB
 #else
 #define LEDPORT     GPIOC
 #define LEDPIN      GPIO_PIN_13
