@@ -130,3 +130,9 @@ GW:          [192.168.0.1]
 [ping_test] 5 packets transmitted, 5 received, 0% packet loss
 [ping_test] delay: min 71 ms, max 100 ms, avg 85 ms
 ```
+
+# Sidenotes
+
+This project also demonstrates how to use a custom configuration folder / headers to set the application size to ~2 MByte instead of the default ~1 MByte. This of course disabled any OTA possibilities for a 2MByte flash.
+
+Note that the bootloader (at 0x800000, 40960) can currently not be disabled to be built. Further, for functions stored in ROM, the first 0x200 (512) bytes are reserved.
