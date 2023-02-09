@@ -140,7 +140,7 @@ static void cmd_wifi_open(int argc, char **argv)
 static void cmd_wifi_close(int argc, char **argv)
 {
 #ifdef CONFIG_WIFI_MANAGEMENT_TASK
-    eloop_event_send(ELOOP_EVENT_TERMINATE);
+    wifi_management_stop();
 #endif
     if (p_wifi_netlink->device_opened) {
         wifi_netlink_dev_close();

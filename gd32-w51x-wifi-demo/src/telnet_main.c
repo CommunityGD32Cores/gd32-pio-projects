@@ -38,6 +38,7 @@ OF SUCH DAMAGE.
 #include <stdarg.h>
 #include <string.h>
 #include <stdbool.h>
+
 #ifdef CONFIG_TELNET_SERVER
 #include "telnet_main.h"
 #include "wifi_management.h"

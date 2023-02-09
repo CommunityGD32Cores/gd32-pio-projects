@@ -78,7 +78,7 @@ OF SUCH DAMAGE.
 
 #if (TLS_VERIFY_SRV_CERT || TLS_VERIFY_CLI_CERT)
 #define TLS_CRT_USED
-#include "ssl_certs.c.in"
+#include "ssl_certs.c"
 #endif
 
 static char server_host[128];
@@ -838,7 +838,7 @@ void cmd_ssl_client(int argc, char **argv)
     mbedtls_cs_pref_dump();
 
     if (NULL == sys_task_create(NULL, (const uint8_t *)"ssl_client", NULL,
-                    SSL_CLIENT_TASK_STK_SIZE, 0, SSL_CLIENT_TASK_PRIO,
+                    4096 /* HIGHER TASK MEMORY */, 0, SSL_CLIENT_TASK_PRIO,
                     (task_func_t)ssl_client, NULL)) {
         printf("ERROR: Create ssl client task failed\r\n");
     }
