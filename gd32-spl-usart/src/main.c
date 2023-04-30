@@ -30,12 +30,14 @@
 
 #ifndef USE_ALTERNATE_USART0_PINS
 /* settings for used USART (UASRT0) and pins, TX = PA9, RX = PA10 */
-#define RCU_GPIO            RCU_GPIOA
-#define RCU_UART            RCU_USART0
-#define USART               USART0
-#define UART_TX_RX_GPIO     GPIOA
-#define UART_TX_GPIO_PIN    GPIO_PIN_9
-#define UART_RX_GPIO_PIN    GPIO_PIN_10
+#define RCU_GPIO_RX         RCU_GPIOA
+#define RCU_GPIO_TX         RCU_GPIOB
+#define RCU_UART            RCU_USART1
+#define USART               USART1
+#define UART_TX_GPIO        GPIOB
+#define UART_TX_GPIO_PIN    GPIO_PIN_15
+#define UART_RX_GPIO        GPIOA
+#define UART_RX_GPIO_PIN    GPIO_PIN_8
 
 /* only for certain series: set pin to alternate function x for UART */
 #if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x)
@@ -44,7 +46,7 @@
 #elif defined(GD32L23x) || defined(GD32W51x)
 // AF7 has PA9 + PA10 USART0 TX+RX function.
 #define UART_TX_AF  GPIO_AF_7
-#define UART_RX_AF  GPIO_AF_7
+#define UART_RX_AF  GPIO_AF_3
 #endif
 #else
 /* settings for USART0 alternate settings, TX = PB6, RX = PB7 */
@@ -75,20 +77,21 @@ int main(void)
     systick_config();
 
     /* enable GPIO clock */
-    rcu_periph_clock_enable(RCU_GPIO);
+    rcu_periph_clock_enable(RCU_GPIO_RX);
+    rcu_periph_clock_enable(RCU_GPIO_TX);
 
     /* enable USART clock */
     rcu_periph_clock_enable(RCU_UART);
 
     /* connect port to USARTx_Tx and USARTx_Rx  */
 #if defined(GD32F3x0) || defined(GD32F1x0) || defined(GD32F4xx) || defined(GD32E23x) || defined(GD32L23x) || defined(GD32W51x)
-    gpio_af_set(UART_TX_RX_GPIO, UART_TX_AF, UART_TX_GPIO_PIN);
-    gpio_af_set(UART_TX_RX_GPIO, UART_RX_AF, UART_RX_GPIO_PIN);
+    gpio_af_set(UART_TX_GPIO, UART_TX_AF, UART_TX_GPIO_PIN);
+    gpio_af_set(UART_RX_GPIO, UART_RX_AF, UART_RX_GPIO_PIN);
 
-    gpio_mode_set(UART_TX_RX_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_TX_GPIO_PIN);
-    gpio_output_options_set(UART_TX_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, UART_TX_GPIO_PIN);
-    gpio_mode_set(UART_TX_RX_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_RX_GPIO_PIN);
-    gpio_output_options_set(UART_TX_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, UART_RX_GPIO_PIN);
+    gpio_mode_set(UART_TX_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_TX_GPIO_PIN);
+    gpio_output_options_set(UART_TX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, UART_TX_GPIO_PIN);
+    gpio_mode_set(UART_RX_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_RX_GPIO_PIN);
+    gpio_output_options_set(UART_RX_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, UART_RX_GPIO_PIN);
 #else /* valid for GD32F10x, GD32F30x */
     gpio_init(UART_TX_RX_GPIO, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, UART_TX_GPIO_PIN);
     gpio_init(UART_TX_RX_GPIO, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, UART_RX_GPIO_PIN);
